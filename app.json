@@ -1,7 +1,7 @@
 {
     "expo": {
         "name": "DELAF",
-        "slug": "DELAF",
+        "slug": "app",
         "version": "1.8.0",
         "orientation": "portrait",
         "icon": "./assets/DELAF_portada.png",
