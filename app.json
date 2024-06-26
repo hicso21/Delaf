@@ -1,36 +1,67 @@
 {
-  "expo": {
-    "name": "app",
-    "slug": "app",
-    "version": "1.0.0",
-    "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
-    "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
-    },
-    "plugins": [
-      "expo-router"
-    ],
-    "experiments": {
-      "typedRoutes": true
+    "expo": {
+        "name": "DELAF",
+        "slug": "DELAF",
+        "version": "1.8.0",
+        "orientation": "portrait",
+        "icon": "./assets/DELAF_portada.png",
+        "scheme": "myapp",
+        "userInterfaceStyle": "automatic",
+        "splash": {
+            "image": "./assets/DELAF_portada.png",
+            "resizeMode": "contain",
+            "backgroundColor": "#1a181d"
+        },
+        "ios": {
+            "supportsTablet": true,
+            "splash": {
+                "backgroundColor": "#1a181d",
+                "resizeMode": "contain",
+                "image": "./assets/DELAF_portada.png"
+            },
+            "bundleIdentifier": "com.hicso.delaf",
+            "infoPlist": {
+                "UIBackgroundModes": ["audio"]
+            }
+        },
+        "android": {
+            "versionCode": 8,
+            "softwareKeyboardLayoutMode": "pan",
+            "intentFilters": [
+                {
+                    "action": "VIEW",
+                    "data": [
+                        {
+                            "scheme": "myapp",
+                            "host": "checkout",
+                            "pathPrefix": "/congrats"
+                        }
+                    ],
+                    "category": ["BROWSABLE", "DEFAULT"]
+                }
+            ],
+            "adaptiveIcon": {
+                "foregroundImage": "./assets/DELAF_portada.png",
+                "backgroundColor": "#1a181d"
+            },
+            "package": "com.hicso.delaf"
+        },
+        "web": {
+            "bundler": "metro",
+            "output": "static",
+            "favicon": "./assets/images/favicon.png"
+        },
+        "plugins": ["expo-router"],
+        "experiments": {
+            "typedRoutes": true
+        },
+        "extra": {
+            "router": {
+                "origin": false
+            },
+            "eas": {
+                "projectId": "bbcc0d35-a75f-4ef6-8abd-8ee6382a4fca"
+            }
+        }
     }
-  }
 }
