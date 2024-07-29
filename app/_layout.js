@@ -25,7 +25,7 @@ import getPbKeyStripe from "../utils/api/get/getPbKeyStripe.js";
 import * as SplashScreen from "expo-splash-screen";
 import Constants from "expo-constants";
 import { vh } from "../styles/dimensions/dimensions.js";
-import Font from "expo-font";
+import * as Font from "expo-font";
 
 const pathToExclude = [
     "/login",
@@ -37,7 +37,6 @@ const pathToExclude = [
 ];
 
 LogBox.ignoreLogs(["new NativeEventEmitter"]);
-SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
     // const [publishableKey, setPublishableKey] = useState("");
