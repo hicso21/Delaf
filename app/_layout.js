@@ -1,8 +1,15 @@
 import { StripeProvider, useStripe } from "@stripe/stripe-react-native";
 import { Slot, usePathname } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useState } from "react";
-import { BackHandler, Linking, LogBox, SafeAreaView, View } from "react-native";
+import {
+    BackHandler,
+    Linking,
+    LogBox,
+    SafeAreaView,
+    Text,
+    View,
+    StatusBar,
+} from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import Toast from "react-native-toast-message";
 import { Provider } from "react-redux";
@@ -16,6 +23,9 @@ import { usePreventScreenCapture } from "expo-screen-capture";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import getPbKeyStripe from "../utils/api/get/getPbKeyStripe.js";
 import * as SplashScreen from "expo-splash-screen";
+import Constants from "expo-constants";
+import { vh } from "../styles/dimensions/dimensions.js";
+import Font from "expo-font";
 
 const pathToExclude = [
     "/login",
@@ -27,12 +37,26 @@ const pathToExclude = [
 ];
 
 LogBox.ignoreLogs(["new NativeEventEmitter"]);
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-    const [publishableKey, setPublishableKey] = useState("");
+    // const [publishableKey, setPublishableKey] = useState("");
+    const [isLoading, setIsLoading] = useState(true);
     const path = usePathname();
     usePreventScreenCapture();
-    SplashScreen.hideAsync();
+
+    const fetch = async () => {
+        Font.loadAsync({
+            IBMPlexSansJP: require("../assets/fonts/IBMPlexSansJP_400Regular.ttf"),
+        })
+            .then(() => {
+                console.log("Carga terminada");
+                setIsLoading(false);
+            })
+            .catch(() => {
+                console.log("Ocurrió un problema");
+            });
+    };
 
     /* Stripe */
     const { handleURLCallback } = useStripe();
@@ -62,11 +86,20 @@ export default function RootLayout() {
     }, [handleDeepLink]);
 
     useEffect(() => {
+        if (!isLoading) {
+            SplashScreen.hideAsync();
+        }
+    }, [isLoading]);
+
+    useEffect(() => {
         BackHandler.addEventListener("hardwareBackPress", () => true);
-        getPbKeyStripe().then(
-            (res) => !res.error && setPublishableKey(res.data)
-        );
+        fetch();
+        // getPbKeyStripe().then(
+        //     (res) => !res.error && setPublishableKey(res.data)
+        // );
     }, []);
+
+    if (isLoading) return null;
 
     return (
         <>
@@ -77,35 +110,40 @@ export default function RootLayout() {
                             publishableKey={publishableKey}
                             merchantIdentifier="merchant.com.delaf"
                         > */}
-                        <View style={styles.view}>
-                            <StatusBar />
-                            <Drawer
-                                drawerContent={OpenedDrawer}
-                                backBehavior="none"
-                                screenOptions={{
-                                    headerTintColor: "#f6f6f6",
-                                    headerStyle: {
-                                        backgroundColor: "#000",
-                                    },
-                                    headerTitle: routes(path)
-                                        ? routes(path)
-                                        : "TU RUTINA DEL DÍA",
-                                    headerShown: pathToExclude.some((item) =>
-                                        path.includes(item)
-                                    )
-                                        ? false
-                                        : true,
-                                    swipeEnabled: pathToExclude.some((item) =>
-                                        path.includes(item)
-                                    )
-                                        ? false
-                                        : true,
-                                }}
-                            />
-                            {!pathToExclude.some((item) =>
-                                path.includes(item)
-                            ) && <FooterNavigator />}
-                        </View>
+                        <StatusBar
+                            barStyle={"light-content"}
+                            backgroundColor={"#000"}
+                        />
+                        <Drawer
+                            drawerContent={OpenedDrawer}
+                            backBehavior="none"
+                            defaultStatus="closed"
+                            screenOptions={{
+                                headerTintColor: "#f6f6f6",
+                                headerStyle: {
+                                    height: 11 * vh,
+                                    borderBottomWidth:
+                                        11 * vh - Constants.statusBarHeight,
+                                    borderBottomColor: "#000",
+                                },
+                                headerTitle: routes(path)
+                                    ? routes(path)
+                                    : "TU RUTINA DEL DÍA",
+                                headerShown: pathToExclude.some((item) =>
+                                    path.includes(item)
+                                )
+                                    ? false
+                                    : true,
+                                swipeEnabled: pathToExclude.some((item) =>
+                                    path.includes(item)
+                                )
+                                    ? false
+                                    : true,
+                            }}
+                        />
+                        {!pathToExclude.some((item) => path.includes(item)) && (
+                            <FooterNavigator />
+                        )}
                         {/* </StripeProvider> */}
                     </Provider>
                 </SafeAreaProvider>

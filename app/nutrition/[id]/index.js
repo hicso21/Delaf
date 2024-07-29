@@ -4,11 +4,14 @@ import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import getUserEvent from "../../../utils/api/get/getUserEvent";
 import { vh } from "../../../styles/dimensions/dimensions";
 import { Surface } from "react-native-paper";
+import useCustomFonts from "../../../hooks/useCustomFonts";
+import AppLoading from "../../../components/AppLoading";
 
 export default function Nutrition() {
     const [texts, setTexts] = useState([]);
     const [date, setDate] = useState("");
     const { id: event_id } = useLocalSearchParams();
+    const [loaded, error, font] = useCustomFonts();
 
     const parseText = (text) => {
         const paragraphs = text.split("\n");
@@ -26,6 +29,7 @@ export default function Nutrition() {
                                 marginTop: 5,
                                 color: "#fff",
                                 textDecorationLine: "underline",
+                                fontFamily: font,
                             }}
                         >
                             {word}
@@ -38,6 +42,7 @@ export default function Nutrition() {
                             maxWidth: "100%",
                             paddingTop: 2,
                             color: "#fff",
+                            fontFamily: font,
                         }}
                         key={word}
                     >{`- ${word}`}</Text>
@@ -46,7 +51,11 @@ export default function Nutrition() {
         });
         const fixedBreakLine = result.map((paragraph, index) => {
             if (paragraph.length == 1 && paragraph[0] == undefined) {
-                return <Text key={index}>{"\n"}</Text>;
+                return (
+                    <Text key={index} style={{ fontFamily: font }}>
+                        {"\n"}
+                    </Text>
+                );
             } else return paragraph;
         });
         return fixedBreakLine;
@@ -65,13 +74,16 @@ export default function Nutrition() {
         }, [])
     );
 
+    if (!loaded || error) return <AppLoading />;
+
     return (
         <View style={{ flex: 1, justifyContent: "space-between", padding: 10 }}>
             <Text
                 style={{
                     color: "#000",
                     fontSize: 20,
-                    marginLeft: 'auto'
+                    marginLeft: "auto",
+                    fontFamily: font,
                 }}
             >
                 {new Date(date).toLocaleDateString()}
@@ -93,14 +105,18 @@ export default function Nutrition() {
                 <ScrollView style={{ maxHeight: 70 * vh }}>
                     {texts?.map((paragraphs) => {
                         return !Array.isArray(paragraphs) ? (
-                            <Text style={{ color: "transparent" }}>
+                            <Text
+                                style={{
+                                    color: "transparent",
+                                    fontFamily: font,
+                                }}
+                            >
                                 {"breakline"}
                             </Text>
                         ) : (
                             paragraphs
                         );
                     })}
-                    
                 </ScrollView>
             </Surface>
             <View />

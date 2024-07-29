@@ -1,7 +1,7 @@
-import { Entypo, FontAwesome, Ionicons } from '@expo/vector-icons';
-import { FlashList } from '@shopify/flash-list';
-import { router } from 'expo-router';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Entypo, FontAwesome, Ionicons } from "@expo/vector-icons";
+import { FlashList } from "@shopify/flash-list";
+import { router } from "expo-router";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
     KeyboardAvoidingView,
     Platform,
@@ -12,20 +12,25 @@ import {
     View,
     Text,
     ScrollView,
-} from 'react-native';
-import io from 'socket.io-client';
-import GlobalMessageBubble from '../../../components/GlobalMessageBubble';
-import { vh, vw } from '../../../styles/dimensions/dimensions';
-import getData from '../../../utils/AsyncStorage/getData';
+} from "react-native";
+import io from "socket.io-client";
+import GlobalMessageBubble from "../../../components/GlobalMessageBubble";
+import { vh, vw } from "../../../styles/dimensions/dimensions";
+import getData from "../../../utils/AsyncStorage/getData";
+import useCustomFonts from "../../../hooks/useCustomFonts";
+import AppLoading from "../../../components/AppLoading";
 
 let socket;
 
 export default function GlobalChat() {
     const [messages, setMessages] = useState([]);
-    const [message, setMessage] = useState('');
+    const [message, setMessage] = useState("");
     const [userData, setUserData] = useState({});
     const [messagesSelected, setMessagesSelected] = useState([]);
     const flashlist = useRef(null);
+    const [loaded, error, font] = useCustomFonts();
+
+    if (!loaded || error) return <AppLoading />;
 
     const receiveMessage = useCallback((message) => {
         setMessages((state) => [...state, message]);
@@ -33,20 +38,20 @@ export default function GlobalChat() {
     }, []);
 
     const handleSubmit = (event) => {
-        if (message == '') return;
+        if (message == "") return;
         const newMessage = {
             message: message.trim(),
             from: userData.name,
             user_id: userData._id,
             on_response: {},
         };
-        setMessage('');
-        socket.emit('global chat', newMessage);
+        setMessage("");
+        socket.emit("global chat", newMessage);
     };
 
     const fetch = async () => {
-        const user = await getData('user');
-        socket = io('https://delaf.click', {
+        const user = await getData("user");
+        socket = io("https://delaf.click", {
             auth: {
                 username: user.name,
                 serverOffset: 0,
@@ -56,10 +61,10 @@ export default function GlobalChat() {
     };
 
     useEffect(() => {
-        fetch().then(() => socket.on('global chat', receiveMessage));
+        fetch().then(() => socket.on("global chat", receiveMessage));
 
         return () => {
-            socket.off('global chat', receiveMessage);
+            socket.off("global chat", receiveMessage);
         };
     }, []);
 
@@ -72,22 +77,22 @@ export default function GlobalChat() {
         <>
             <TouchableOpacity
                 style={{
-                    position: 'absolute',
+                    position: "absolute",
                     top: -40,
                     right: 15,
                     zIndex: 100,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                 }}
-                onPress={() => router.push('/races')}
+                onPress={() => router.push("/races")}
             >
-                <FontAwesome color={'white'} size={30} name="flag-checkered" />
+                <FontAwesome color={"white"} size={30} name="flag-checkered" />
             </TouchableOpacity>
             <SafeAreaView style={{ flex: 1 }}>
                 <KeyboardAvoidingView
                     style={{ flex: 1 }}
-                    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                    behavior={Platform.OS === "ios" ? "padding" : undefined}
                     keyboardVerticalOffset={60}
                 >
                     <View style={styles.entireView}>
@@ -144,27 +149,31 @@ export default function GlobalChat() {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={() => {
-                                    router.push('/chat/juan');
+                                    router.push("/chat/juan");
                                 }}
                                 style={styles.buttonContainer}
                             >
                                 <View
                                     style={{
-                                        backgroundColor: '#007AFF',
+                                        backgroundColor: "#007AFF",
                                         width: 40,
                                         height: 40,
                                         borderTopLeftRadius: 15,
                                         borderTopRightRadius: 15,
                                         borderBottomLeftRadius: 15,
                                         borderBottomRightRadius: 5,
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
                                     }}
                                 >
                                     <Text
                                         adjustsFontSizeToFit={true}
-                                        style={{ fontSize: 24, color: 'white' }}
+                                        style={{
+                                            fontSize: 24,
+                                            color: "white",
+                                            fontFamily: font,
+                                        }}
                                     >
                                         J
                                     </Text>
@@ -181,33 +190,33 @@ export default function GlobalChat() {
 const styles = StyleSheet.create({
     entireView: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#000',
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#000",
     },
     flatlist: {
-        overflow: 'auto',
+        overflow: "auto",
         height: 100 * vh - 7 * vh - 40 - 61,
-        width: '100%',
+        width: "100%",
         marginBottom: 5,
-        backgroundColor: '#f6f6f6',
+        backgroundColor: "#f6f6f6",
     },
     bottomContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
+        flexDirection: "row",
+        justifyContent: "space-around",
         width: 100 * vw,
     },
     buttonContainer: {
         width: 30,
         height: 40,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
     },
     input: {
         height: 40,
         borderRadius: 15,
-        backgroundColor: '#f6f6f6',
+        backgroundColor: "#f6f6f6",
         width: 100 * vw - 170 + 60,
         paddingHorizontal: 10,
         paddingVertical: 5,

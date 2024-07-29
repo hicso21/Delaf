@@ -1,5 +1,5 @@
-import { useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import {
     ScrollView,
     StyleSheet,
@@ -7,29 +7,32 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-} from 'react-native';
-import { Modal, Portal } from 'react-native-paper';
-import SelectDropdown from 'react-native-select-dropdown';
-import Toast from 'react-native-toast-message';
-import StatusBar from '../../components/StatusBar';
-import { vh, vw } from '../../styles/dimensions/dimensions';
-import getData from '../../utils/AsyncStorage/getData';
-import getUserData from '../../utils/api/get/getUserData';
-import updateRunner from '../../utils/api/put/updateRunner';
-import countries from '../../utils/constants/countries';
-import compareTwoObjects from '../../utils/functions/compareTwoObjects';
+} from "react-native";
+import { Modal, Portal } from "react-native-paper";
+import SelectDropdown from "react-native-select-dropdown";
+import Toast from "react-native-toast-message";
+import StatusBar from "../../components/StatusBar";
+import { vh, vw } from "../../styles/dimensions/dimensions";
+import getData from "../../utils/AsyncStorage/getData";
+import getUserData from "../../utils/api/get/getUserData";
+import updateRunner from "../../utils/api/put/updateRunner";
+import countries from "../../utils/constants/countries";
+import compareTwoObjects from "../../utils/functions/compareTwoObjects";
+import useCustomFonts from "../../hooks/useCustomFonts";
+import AppLoading from "../../components/AppLoading";
 
 export default function Profile() {
     const [userData, setUserData] = useState({});
     const [dbUserData, setDbUserData] = useState({});
-    const [id, setId] = useState('');
+    const [id, setId] = useState("");
     const [modal, setModal] = useState(false);
+    const [loaded, error, font] = useCustomFonts();
 
     const showModal = () => setModal(true);
     const hideModal = () => setModal(false);
 
     const fetch = async () => {
-        const user = await getData('user');
+        const user = await getData("user");
         setId(user._id);
         const { data: userDataAPI, error: userDataError } = await getUserData(
             user._id
@@ -56,21 +59,21 @@ export default function Profile() {
         const condition = compareTwoObjects(userData, dbUserData);
         if (condition === false)
             return Toast.show({
-                type: 'info',
-                text1: 'No se cambió ningún dato',
+                type: "info",
+                text1: "No se cambió ningún dato",
             });
         console.log(userData);
         const res = await updateRunner(id, userData);
-        console.log(res)
+        console.log(res);
         if (!res.error)
             Toast.show({
-                type: 'success',
-                text1: 'Se cambiarón los datos correctamente',
+                type: "success",
+                text1: "Se cambiarón los datos correctamente",
             });
         else
             Toast.show({
-                type: 'error',
-                text1: 'Ocurrió un error en el servidor, intenta más tarde.',
+                type: "error",
+                text1: "Ocurrió un error en el servidor, intenta más tarde.",
             });
         hideModal();
     };
@@ -81,6 +84,8 @@ export default function Profile() {
         }, [])
     );
 
+    if (!loaded || error) return <AppLoading />;
+
     return (
         <>
             <Portal>
@@ -88,21 +93,27 @@ export default function Profile() {
                     visible={modal}
                     onDismiss={hideModal}
                     contentContainerStyle={{
-                        backgroundColor: 'white',
+                        backgroundColor: "white",
                         padding: 20,
                         marginHorizontal: 30,
                         borderRadius: 10,
                     }}
                 >
-                    <Text style={{ textAlign: 'center', fontSize: 18 }}>
+                    <Text
+                        style={{
+                            textAlign: "center",
+                            fontSize: 18,
+                            fontFamily: font,
+                        }}
+                    >
                         Estás seguro que quieres hacer estos cambios en tu
                         perfil?
                     </Text>
                     <View
                         style={{
-                            width: 'auto',
-                            justifyContent: 'center',
-                            flexDirection: 'row',
+                            width: "auto",
+                            justifyContent: "center",
+                            flexDirection: "row",
                             paddingTop: 30,
                             paddingBottom: 10,
                             gap: 20,
@@ -112,13 +123,19 @@ export default function Profile() {
                             <View
                                 style={{
                                     borderRadius: 5,
-                                    borderColor: '#000',
+                                    borderColor: "#000",
                                     borderWidth: 1,
                                     paddingVertical: 5,
                                     paddingHorizontal: 10,
                                 }}
                             >
-                                <Text style={{ fontSize: 16, color: '#000' }}>
+                                <Text
+                                    style={{
+                                        fontSize: 16,
+                                        color: "#000",
+                                        fontFamily: font,
+                                    }}
+                                >
                                     Cancelar
                                 </Text>
                             </View>
@@ -127,15 +144,19 @@ export default function Profile() {
                             <View
                                 style={{
                                     borderRadius: 5,
-                                    borderColor: '#000',
+                                    borderColor: "#000",
                                     borderWidth: 1,
                                     paddingVertical: 5,
                                     paddingHorizontal: 10,
-                                    backgroundColor: '#000',
+                                    backgroundColor: "#000",
                                 }}
                             >
                                 <Text
-                                    style={{ fontSize: 16, color: '#f6f6f6' }}
+                                    style={{
+                                        fontSize: 16,
+                                        color: "#f6f6f6",
+                                        fontFamily: font,
+                                    }}
                                 >
                                     Confirmar
                                 </Text>
@@ -147,9 +168,9 @@ export default function Profile() {
             <View
                 style={{
                     flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: 'black',
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "black",
                 }}
             >
                 <StatusBar />
@@ -205,8 +226,8 @@ export default function Profile() {
                                     <SelectDropdown
                                         buttonStyle={styles.selectStyle}
                                         defaultButtonText={
-                                            userData.country == ''
-                                                ? 'Seleccionalo'
+                                            userData.country == ""
+                                                ? "Seleccionalo"
                                                 : userData?.country
                                         }
                                         data={countries
@@ -293,8 +314,8 @@ export default function Profile() {
                     </View>
                     <View
                         style={{
-                            width: 'auto',
-                            alignItems: 'center',
+                            width: "auto",
+                            alignItems: "center",
                             marginTop: 50,
                         }}
                     >
@@ -302,7 +323,7 @@ export default function Profile() {
                             <View
                                 style={{
                                     borderRadius: 5,
-                                    borderColor: '#f6f6f6',
+                                    borderColor: "#f6f6f6",
                                     borderWidth: 1,
                                     paddingHorizontal: 10,
                                     paddingVertical: 5,
@@ -310,8 +331,9 @@ export default function Profile() {
                             >
                                 <Text
                                     style={{
-                                        color: '#f6f6f6',
+                                        color: "#f6f6f6",
                                         fontSize: 18,
+                                        fontFamily: font,
                                     }}
                                 >
                                     Cambiar datos
@@ -329,22 +351,22 @@ const styles = StyleSheet.create({
     modal: {
         height: 100 * vh,
         width: 100 * vw,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'transparent',
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "transparent",
     },
     modalContainer: {
-        height: '80%',
-        justifyContent: 'center',
-        alignItems: 'center',
+        height: "80%",
+        justifyContent: "center",
+        alignItems: "center",
         paddingVertical: 25,
         paddingHorizontal: 25,
-        backgroundColor: '#f6f6f6',
+        backgroundColor: "#f6f6f6",
         borderRadius: 5,
     },
     modalContent: {
-        height: '100%',
-        justifyContent: 'space-around',
+        height: "100%",
+        justifyContent: "space-around",
     },
     view: {
         height: 100 * vh,
@@ -352,9 +374,9 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#000',
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#000",
     },
     inputContainer: {
         width: 80 * vw,
@@ -362,22 +384,22 @@ const styles = StyleSheet.create({
     },
     switchContainer: {
         marginTop: 15,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
     },
     containerDouble: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
     inputDouble: {
-        width: '45%',
+        width: "45%",
     },
     switch: {
-        alignItems: 'center',
+        alignItems: "center",
     },
     input: {
-        backgroundColor: '#f6f6f6',
+        backgroundColor: "#f6f6f6",
         height: 40,
         borderRadius: 5,
         fontSize: 18,
@@ -388,45 +410,49 @@ const styles = StyleSheet.create({
     },
     selectStyle: {
         height: 40,
-        width: '100%',
+        width: "100%",
         borderRadius: 5,
         fontSize: 18,
-        backgroundColor: '#f6f6f6',
+        backgroundColor: "#f6f6f6",
     },
     viewButton: {
-        width: '100%',
+        width: "100%",
         borderRadius: 5,
-        backgroundColor: '#f6f6f6',
+        backgroundColor: "#f6f6f6",
         height: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: "center",
+        alignItems: "center",
     },
     viewText: {
         fontSize: 18,
-        color: '#000',
+        color: "#000",
+        fontFamily: 'IBMPlexSansJP'
     },
     text: {
         fontSize: 14,
-        color: '#f6f6f6',
+        color: "#f6f6f6",
         marginBottom: 5,
+        fontFamily: 'IBMPlexSansJP'
     },
     inverseText: {
         fontSize: 14,
-        color: '#000',
+        color: "#000",
         marginBottom: 5,
+        fontFamily: 'IBMPlexSansJP'
     },
     registerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center",
         marginVertical: 10,
         gap: 5,
     },
     registerText: {
-        color: '#f6f6f6',
+        color: "#f6f6f6",
+        fontFamily: 'IBMPlexSansJP'
     },
     buttonContainer: {
         marginTop: 20,
-        alignItems: 'center',
+        alignItems: "center",
         paddingBottom: 10,
     },
 });

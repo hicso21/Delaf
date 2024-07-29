@@ -1,14 +1,18 @@
-import { useFocusEffect, router } from 'expo-router';
-import { useCallback } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
-import logo from '../../assets/DELAF.png';
-import getData from '../../utils/AsyncStorage/getData';
+import { useFocusEffect, router } from "expo-router";
+import { useCallback } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+import logo from "../../assets/DELAF.png";
+import getData from "../../utils/AsyncStorage/getData";
+import useCustomFonts from "../../hooks/useCustomFonts";
+import AppLoading from "../../components/AppLoading";
 
 export default function Redirect() {
+    const [loaded, error, font] = useCustomFonts();
+
     const fetch = async () => {
-        const user = await getData('user');
-        if (user?.email) router.push('/home');
-        else router.push('/login');
+        const user = await getData("user");
+        if (user?.email) router.push("/home");
+        else router.push("/login");
         // else router.push('/prices/price_1P8jfTAXPkjgDqVOmsyj2Xsr');
     };
 
@@ -18,22 +22,29 @@ export default function Redirect() {
         }, [])
     );
 
+    if (!loaded || error) return <AppLoading />;
+
     return (
         <View
             style={{
                 flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: '#000',
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "#000",
             }}
         >
             <View style={{ aspectRatio: 1, width: 250 }}>
                 <Image
                     source={logo}
-                    style={{ width: '100%', height: '100%', borderRadius: 10 }}
+                    style={{ width: "100%", height: "100%", borderRadius: 10 }}
                 />
             </View>
-            <Text adjustsFontSizeToFit={true} style={{ color: '#f6f6f6', fontSize: 18 }}>Cargando...</Text>
+            <Text
+                adjustsFontSizeToFit={true}
+                style={{ color: "#f6f6f6", fontSize: 18, fontFamily: font }}
+            >
+                Cargando...
+            </Text>
         </View>
     );
 }

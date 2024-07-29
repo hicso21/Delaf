@@ -1,22 +1,25 @@
-import { router, useFocusEffect } from 'expo-router';
-import { useCallback, useState } from 'react';
-import { Image, Text, View } from 'react-native';
-import Toast from 'react-native-toast-message';
-import profilePicture from '../../assets/DELAF.png';
-import { vw } from '../../styles/dimensions/dimensions';
-import getData from '../../utils/AsyncStorage/getData';
-import mergeData from '../../utils/AsyncStorage/mergeItem';
-import getCodeByEmail from '../../utils/api/get/getByEmail';
-import getPaid from '../../utils/api/get/getPaid';
-import getUserData from '../../utils/api/get/getUserData';
-import getAge from '../../utils/functions/getAge';
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
+import { Image, Text, View } from "react-native";
+import Toast from "react-native-toast-message";
+import profilePicture from "../../assets/DELAF.png";
+import { vw } from "../../styles/dimensions/dimensions";
+import getData from "../../utils/AsyncStorage/getData";
+import mergeData from "../../utils/AsyncStorage/mergeItem";
+import getCodeByEmail from "../../utils/api/get/getByEmail";
+import getPaid from "../../utils/api/get/getPaid";
+import getUserData from "../../utils/api/get/getUserData";
+import getAge from "../../utils/functions/getAge";
+import useCustomFonts from "../../hooks/useCustomFonts";
+import AppLoading from "../../components/AppLoading";
 
 export default function Home() {
     const [userData, setUserData] = useState({});
+    const [loaded, error, font] = useCustomFonts();
 
     const verifications = async (user) => {
-        if (!user?.email || !user?.email.includes('@')) {
-            router.push('/login');
+        if (!user?.email || !user?.email.includes("@")) {
+            router.push("/login");
             return true;
         }
         const data = await getCodeByEmail(user.email);
@@ -29,36 +32,36 @@ export default function Home() {
     };
 
     const fetch = async () => {
-        const user = await getData('user');
+        const user = await getData("user");
         const stop = await verifications(user);
         if (stop) return;
         if (user?.error)
             return Toast.show({
-                type: 'error',
-                text1: 'Ocurrió un error cargando tus datos.',
-                text2: 'Por favor cierra sesión y vuelve a iniciar.',
+                type: "error",
+                text1: "Ocurrió un error cargando tus datos.",
+                text2: "Por favor cierra sesión y vuelve a iniciar.",
             });
         const { error, data } = await getUserData(user._id);
         if (!error) {
-            mergeData('user', data.data);
+            mergeData("user", data.data);
             setUserData(data.data);
         } else {
             setUserData(user);
         }
     };
 
-    useFocusEffect(
-        useCallback(() => {
-            fetch();
-        }, [])
-    );
+    useEffect(() => {
+        fetch();
+    }, []);
+
+    if (!loaded || error) return <AppLoading />;
 
     return (
         <View
             style={{
                 flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
+                justifyContent: "center",
+                alignItems: "center",
             }}
         >
             <View
@@ -67,9 +70,9 @@ export default function Home() {
                     paddingVertical: 40,
                     marginBottom: 5,
                     borderRadius: 5,
-                    backgroundColor: '#000',
-                    justifyContent: 'center',
-                    alignItems: 'center',
+                    backgroundColor: "#000",
+                    justifyContent: "center",
+                    alignItems: "center",
                 }}
             >
                 <Image
@@ -84,50 +87,83 @@ export default function Home() {
                 <Text
                     adjustsFontSizeToFit={true}
                     style={{
-                        color: '#f6f6f6',
+                        color: "#f6f6f6",
                         fontSize: 14,
                         opacity: 0.75,
                         marginVertical: 5,
+                        fontFamily: font,
                     }}
                 >
                     Bienvenido
                 </Text>
                 <Text
                     adjustsFontSizeToFit={true}
-                    style={{ color: '#f6f6f6', fontSize: 24 }}
+                    style={{
+                        color: "#f6f6f6",
+                        fontSize: 24,
+                        fontFamily: font,
+                    }}
                 >
                     {userData?.name}
                 </Text>
                 <Text
                     adjustsFontSizeToFit={true}
-                    style={{ color: '#f6f6f6', fontSize: 18 }}
+                    style={{
+                        color: "#f6f6f6",
+                        fontSize: 18,
+                        fontFamily: font,
+                    }}
                 >{`${userData?.city}, ${userData?.country}`}</Text>
             </View>
             <View
                 style={{
                     width: 80 * vw,
-                    flexDirection: 'row',
-                    justifyContent: 'space-around',
+                    flexDirection: "row",
+                    justifyContent: "space-around",
                     marginTop: 10,
                 }}
             >
-                <View style={{ alignItems: 'center' }}>
-                    <Text adjustsFontSizeToFit={true}>EDAD</Text>
-                    <Text adjustsFontSizeToFit={true}>{`${getAge(
+                <View style={{ alignItems: "center" }}>
+                    <Text
+                        adjustsFontSizeToFit={true}
+                        style={{ fontFamily: font }}
+                    >
+                        EDAD
+                    </Text>
+                    <Text
+                        adjustsFontSizeToFit={true}
+                        style={{ fontFamily: font }}
+                    >{`${getAge(
                         new Date(userData?.birthday).getTime()
                     )} años`}</Text>
                 </View>
-                <View style={{ alignItems: 'center' }}>
-                    <Text adjustsFontSizeToFit={true}>ALTURA</Text>
+                <View style={{ alignItems: "center" }}>
                     <Text
                         adjustsFontSizeToFit={true}
-                    >{`${userData?.height} cm`}</Text>
+                        style={{ fontFamily: font }}
+                    >
+                        ALTURA
+                    </Text>
+                    <Text
+                        adjustsFontSizeToFit={true}
+                        style={{ fontFamily: font }}
+                    >
+                        {`${userData?.height} cm`}
+                    </Text>
                 </View>
-                <View style={{ alignItems: 'center' }}>
-                    <Text adjustsFontSizeToFit={true}>PESO</Text>
+                <View style={{ alignItems: "center" }}>
                     <Text
                         adjustsFontSizeToFit={true}
-                    >{`${userData?.weight} kg`}</Text>
+                        style={{ fontFamily: font }}
+                    >
+                        PESO
+                    </Text>
+                    <Text
+                        adjustsFontSizeToFit={true}
+                        style={{ fontFamily: font }}
+                    >
+                        {`${userData?.weight} kg`}
+                    </Text>
                 </View>
             </View>
         </View>

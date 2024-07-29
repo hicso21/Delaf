@@ -17,6 +17,9 @@ import audioSource from "../../../assets/test.wav";
 import { vh, vw } from "../../../styles/dimensions/dimensions";
 import getAudios from "../../../utils/api/get/getAudios";
 import fromMillisecondsToTime from "../../../utils/functions/fromMillisecondsToTime";
+import LoadingSpinner from "../../../components/LoadingSpinner";
+import useCustomFonts from "../../../hooks/useCustomFonts";
+import AppLoading from "../../../components/AppLoading";
 
 /* 
 		name: String,
@@ -50,7 +53,12 @@ const ModalContent = ({ open }) => {
                 }}
             >
                 <ActivityIndicator size={"large"} color={"#000"} />
-                <Text adjustsFontSizeToFit={true}>Aguarda un momento.</Text>
+                <Text
+                    adjustsFontSizeToFit={true}
+                    style={{ fontFamily: "IBMPlexSansJP" }}
+                >
+                    Aguarda un momento.
+                </Text>
             </View>
         </View>
     );
@@ -205,31 +213,70 @@ export default function () {
         { name: "Testing2", src: audioSource },
     ]);
     const [index, setIndex] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const [loaded, error, font] = useCustomFonts();
 
     const fetch = async () => {
+        setIsLoading(true);
         const { data, error } = await getAudios();
         if (error)
             return Toast.show({
                 type: "error",
                 text1: "Ocurrió un error, por favor contáctanos.",
             });
-        if (data.length) setAudios(data);
-        else Toast.show({ type: "info", text1: "Aún no hay videos" });
+        setAudios(data);
+        setIsLoading(false);
     };
 
     useEffect(() => {
         fetch();
     }, []);
 
+    if (!loaded || error) return <AppLoading />;
+
     return (
         <View style={styles.view}>
-            <Carousel
-                width={100 * vw}
-                height={`calc(${100 * vh} - ${6.2 * vh})`}
-                data={audios}
-                onSnapToItem={(index) => setIndex(index)}
-                renderItem={() => <RenderItem audios={audios} index={index} />}
-            />
+            {isLoading ? (
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: "#000",
+                        width: 100 * vw,
+                        gap: 30,
+                    }}
+                >
+                    <ActivityIndicator
+                        size="large"
+                        color="#fff"
+                        style={{ color: "#fff", transform: "scale(2)" }}
+                    />
+                    <Text
+                        style={{
+                            color: "#f6f6f6",
+                            fontSize: 16,
+                            fontFamily: font,
+                        }}
+                    >
+                        Aguarda un momento
+                    </Text>
+                </View>
+            ) : audios.length > 0 ? (
+                <Carousel
+                    width={100 * vw}
+                    height={`calc(${100 * vh} - ${6.2 * vh})`}
+                    data={audios}
+                    onSnapToItem={(index) => setIndex(index)}
+                    renderItem={() => (
+                        <RenderItem audios={audios} index={index} />
+                    )}
+                />
+            ) : (
+                <View style={styles.noAudios}>
+                    <Text style={{ fontFamily: font }}>No hay audios aún</Text>
+                </View>
+            )}
         </View>
     );
 }
@@ -290,11 +337,13 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 24,
         color: "#f6f6f6",
+        fontFamily: "IBMPlexSansJP",
     },
     timer: {
         textAlign: "center",
         fontSize: 18,
         color: "#f6f6f6",
+        fontFamily: "IBMPlexSansJP",
     },
     video: {
         width: "100%",

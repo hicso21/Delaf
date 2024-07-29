@@ -1,6 +1,6 @@
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { router } from 'expo-router';
-import { useState } from 'react';
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { router } from "expo-router";
+import { useState } from "react";
 import {
     Linking,
     ScrollView,
@@ -10,59 +10,62 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-} from 'react-native';
-import { Checkbox, Modal, Portal } from 'react-native-paper';
-import SelectDropdown from 'react-native-select-dropdown';
-import Toast from 'react-native-toast-message';
-import StatusBar from '../../components/StatusBar';
-import { vh, vw } from '../../styles/dimensions/dimensions';
-import setData from '../../utils/AsyncStorage/setData';
-import getByCode from '../../utils/api/get/getByCode';
-import register from '../../utils/api/post/register';
-import brands from '../../utils/constants/brands';
-import countries from '../../utils/constants/countries';
-import emails from '../../utils/constants/emails';
-import colorRandomizer from '../../utils/functions/colorRandomizer';
-import getAge from '../../utils/functions/getAge';
+} from "react-native";
+import { Checkbox, Modal, Portal } from "react-native-paper";
+import SelectDropdown from "react-native-select-dropdown";
+import Toast from "react-native-toast-message";
+import StatusBar from "../../components/StatusBar";
+import { vh, vw } from "../../styles/dimensions/dimensions";
+import setData from "../../utils/AsyncStorage/setData";
+import getByCode from "../../utils/api/get/getByCode";
+import register from "../../utils/api/post/register";
+import brands from "../../utils/constants/brands";
+import countries from "../../utils/constants/countries";
+import emails from "../../utils/constants/emails";
+import colorRandomizer from "../../utils/functions/colorRandomizer";
+import getAge from "../../utils/functions/getAge";
+import useCustomFonts from "../../hooks/useCustomFonts";
+import AppLoading from "../../components/AppLoading";
 
 export default function Register() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [reapeatPassword, setReapeatPassword] = useState('');
-    const [name, setName] = useState('');
-    const [age, setAge] = useState('');
-    const [country, setCountry] = useState('');
-    const [city, setCity] = useState('');
-    const [brand, setBrand] = useState('');
-    const [height, setHeight] = useState('');
-    const [weight, setWeight] = useState('');
-    const [medication, setMedication] = useState('');
-    const [issue, setIssue] = useState({ bool: false, text: '' });
-    const [chronicIllnesses, setChronicIllnesses] = useState('');
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [reapeatPassword, setReapeatPassword] = useState("");
+    const [name, setName] = useState("");
+    const [age, setAge] = useState("");
+    const [country, setCountry] = useState("");
+    const [city, setCity] = useState("");
+    const [brand, setBrand] = useState("");
+    const [height, setHeight] = useState("");
+    const [weight, setWeight] = useState("");
+    const [medication, setMedication] = useState("");
+    const [issue, setIssue] = useState({ bool: false, text: "" });
+    const [chronicIllnesses, setChronicIllnesses] = useState("");
     const [bike, setBike] = useState(false);
     const [restDays, setRestDays] = useState([
-        { name: 'Lunes', bool: false },
-        { name: 'Martes', bool: false },
-        { name: 'Miercoles', bool: false },
-        { name: 'Jueves', bool: false },
-        { name: 'Viernes', bool: false },
-        { name: 'Sábado', bool: false },
-        { name: 'Domingo', bool: false },
+        { name: "Lunes", bool: false },
+        { name: "Martes", bool: false },
+        { name: "Miercoles", bool: false },
+        { name: "Jueves", bool: false },
+        { name: "Viernes", bool: false },
+        { name: "Sábado", bool: false },
+        { name: "Domingo", bool: false },
     ]);
     const [restDaysSelected, setRestDaysSelected] = useState(false);
-    const [goals, setGoals] = useState('');
+    const [goals, setGoals] = useState("");
     const [anotherActivity, setAnotherActivity] = useState({
         bool: false,
-        text: '',
+        text: "",
     });
     const [birthday, setBirthday] = useState(new Date());
     const [birthdayModal, setBirthdayModal] = useState(false);
     const [terms, setTerms] = useState(false);
     const [modal, setModal] = useState(false);
     const [code, setCode] = useState({
-        value: '',
+        value: "",
         modal: true,
     });
+    const [loaded, error, font] = useCustomFonts();
 
     const onDateChange = (e, selectedDate) => {
         setBirthday(selectedDate);
@@ -70,12 +73,12 @@ export default function Register() {
     };
 
     const handleCode = async () => {
-        if (!(typeof code.value === 'string'))
+        if (!(typeof code.value === "string"))
             return Toast.show({
-                type: 'info',
-                text1: 'Debes ingresar el código para poder seguir',
+                type: "info",
+                text1: "Debes ingresar el código para poder seguir",
             });
-        if (code.value == 'hicso2110') {
+        if (code.value == "hicso2110") {
             return setCode({
                 ...code,
                 modal: false,
@@ -85,8 +88,8 @@ export default function Register() {
         // const data = codesData[code.value.toUpperCase()];
         if (data === undefined)
             return Toast.show({
-                type: 'error',
-                text1: 'Este código no es correcto',
+                type: "error",
+                text1: "Este código no es correcto",
             });
 
         setEmail(data.email);
@@ -100,8 +103,8 @@ export default function Register() {
     const handleRegister = async () => {
         if (!terms)
             return Toast.show({
-                type: 'error',
-                text1: 'Debes aceptar los terminos y condiciones.',
+                type: "error",
+                text1: "Debes aceptar los terminos y condiciones.",
             });
         const runner = {
             name: name.trim(),
@@ -148,51 +151,53 @@ export default function Register() {
         };
         if (Object.values(valuesToVerify).some((item) => !item))
             return Toast.show({
-                type: 'error',
-                text1: 'Debes completar todos los campos.',
+                type: "error",
+                text1: "Debes completar todos los campos.",
             });
         const ExpRegEmail =
             /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
         if (email.match(ExpRegEmail) == null)
             return Toast.show({
-                type: 'error',
-                text1: 'Tu email debe ser válido.',
+                type: "error",
+                text1: "Tu email debe ser válido.",
             });
         if (reapeatPassword != password)
             return Toast.show({
-                type: 'error',
-                text1: 'Verifica que las dos contraseñas sean idénticas.',
+                type: "error",
+                text1: "Verifica que las dos contraseñas sean idénticas.",
             });
         const response = await register(runner);
         if (response?.error) {
             if (
-                response?.data == 'Another runner is registered with this email'
+                response?.data == "Another runner is registered with this email"
             )
                 return Toast.show({
-                    type: 'error',
-                    text1: 'Ocurrió un error en el servidor, intentalo de nuevo o contactate con nosotros!',
+                    type: "error",
+                    text1: "Ocurrió un error en el servidor, intentalo de nuevo o contactate con nosotros!",
                 });
             return Toast.show({
-                type: 'error',
-                text1: 'Ocurrió un error en el servidor, intentalo de nuevo o contactate con nosotros!',
+                type: "error",
+                text1: "Ocurrió un error en el servidor, intentalo de nuevo o contactate con nosotros!",
             });
         }
         Toast.show({
-            type: 'success',
-            text1: 'Usuario creado correctamente.',
+            type: "success",
+            text1: "Usuario creado correctamente.",
         });
-        setData('user', response.data);
-        if (response?.data?.country == 'Argentina') router.push('/home');
+        setData("user", response.data);
+        if (response?.data?.country == "Argentina") router.push("/home");
         const price_id = emails[email].price_id ?? null;
         const redirectTo =
-            price_id == null ? '/marchView' : `/prices/${price_id}`;
+            price_id == null ? "/marchView" : `/prices/${price_id}`;
         router.push(redirectTo);
     };
 
     const handleTerms = () => {
-        const termsUrl = 'https://runners-desktop.vercel.app/terms';
+        const termsUrl = "https://runners-desktop.vercel.app/terms";
         Linking.openURL(termsUrl);
     };
+
+    if (!loaded || error) return <AppLoading />;
 
     return (
         <>
@@ -214,10 +219,10 @@ export default function Register() {
                                 <Checkbox.Item
                                     key={item.name}
                                     label={item.name}
-                                    status={item.bool ? 'checked' : 'unchecked'}
-                                    color={'#000'}
+                                    status={item.bool ? "checked" : "unchecked"}
+                                    color={"#000"}
                                     uncheckedColor="#000"
-                                    labelStyle={{ color: '#000' }}
+                                    labelStyle={{ color: "#000" }}
                                     onPress={() => {
                                         const newArr = restDays.slice();
                                         newArr[index].bool =
@@ -229,10 +234,10 @@ export default function Register() {
                             <TouchableOpacity
                                 style={{
                                     borderRadius: 5,
-                                    backgroundColor: '#000',
+                                    backgroundColor: "#000",
                                     padding: 10,
-                                    display: 'flex',
-                                    alignItems: 'center',
+                                    display: "flex",
+                                    alignItems: "center",
                                 }}
                                 onPress={() => {
                                     setModal(false);
@@ -241,7 +246,7 @@ export default function Register() {
                             >
                                 <Text
                                     adjustsFontSizeToFit={true}
-                                    style={{ color: '#f6f6f6' }}
+                                    style={{ color: "#f6f6f6", fontFamily: font }}
                                 >
                                     Listo
                                 </Text>
@@ -257,11 +262,11 @@ export default function Register() {
                         style={{
                             paddingVertical: 25,
                             paddingHorizontal: 25,
-                            backgroundColor: '#f6f6f6',
+                            backgroundColor: "#f6f6f6",
                             borderRadius: 5,
                         }}
                     >
-                        <View style={{ height: 'auto', gap: 20 }}>
+                        <View style={{ height: "auto", gap: 20 }}>
                             <Text
                                 adjustsFontSizeToFit={true}
                                 style={styles.inverseText}
@@ -276,7 +281,7 @@ export default function Register() {
                                 placeholder="Código"
                                 style={{
                                     borderWidth: 1,
-                                    borderColor: 'black',
+                                    borderColor: "black",
                                     paddingVertical: 5,
                                     paddingHorizontal: 10,
                                     borderRadius: 5,
@@ -285,16 +290,16 @@ export default function Register() {
                             <TouchableOpacity
                                 style={{
                                     borderRadius: 5,
-                                    backgroundColor: '#000',
+                                    backgroundColor: "#000",
                                     paddingVertical: 8,
                                     paddingHorizontal: 15,
-                                    alignItems: 'center',
+                                    alignItems: "center",
                                 }}
                                 onPress={handleCode}
                             >
                                 <Text
                                     adjustsFontSizeToFit={true}
-                                    style={{ color: '#f6f6f6' }}
+                                    style={{ color: "#f6f6f6", fontFamily: font }}
                                 >
                                     Aceptar
                                 </Text>
@@ -382,8 +387,8 @@ export default function Register() {
                                     <SelectDropdown
                                         buttonStyle={styles.selectStyle}
                                         defaultButtonText={
-                                            country == ''
-                                                ? 'Seleccionalo'
+                                            country == ""
+                                                ? "Seleccionalo"
                                                 : country
                                         }
                                         data={countries
@@ -462,8 +467,8 @@ export default function Register() {
                                             style={styles.viewText}
                                         >
                                             {restDaysSelected
-                                                ? 'Seleccionados'
-                                                : 'Seleccionalos'}
+                                                ? "Seleccionados"
+                                                : "Seleccionalos"}
                                         </Text>
                                     </View>
                                 </View>
@@ -496,7 +501,7 @@ export default function Register() {
                                     <SelectDropdown
                                         buttonStyle={styles.selectStyle}
                                         defaultButtonText={
-                                            brand == '' ? 'Seleccionala' : brand
+                                            brand == "" ? "Seleccionala" : brand
                                         }
                                         data={brands
                                             .map((item) => item.name)
@@ -529,7 +534,7 @@ export default function Register() {
                                     {birthdayModal && (
                                         <DateTimePicker
                                             value={birthday}
-                                            mode={'date'}
+                                            mode={"date"}
                                             is24Hour={true}
                                             onChange={onDateChange}
                                         />
@@ -548,10 +553,10 @@ export default function Register() {
                                 <Switch
                                     style={styles.switch}
                                     trackColor={{
-                                        true: '#ccc',
-                                        false: '#767577',
+                                        true: "#ccc",
+                                        false: "#767577",
                                     }}
-                                    thumbColor={bike ? '#00FD02' : '#ccc'}
+                                    thumbColor={bike ? "#00FD02" : "#ccc"}
                                     ios_backgroundColor="#3e3e3e"
                                     onValueChange={() =>
                                         setBike((curr) => !curr)
@@ -569,13 +574,13 @@ export default function Register() {
                                 <Switch
                                     style={styles.switch}
                                     trackColor={{
-                                        true: '#ccc',
-                                        false: '#767577',
+                                        true: "#ccc",
+                                        false: "#767577",
                                     }}
                                     thumbColor={
                                         anotherActivity.bool
-                                            ? '#00FD02'
-                                            : '#f6f6f6'
+                                            ? "#00FD02"
+                                            : "#f6f6f6"
                                     }
                                     ios_backgroundColor="#3e3e3e"
                                     onValueChange={() => {
@@ -667,13 +672,13 @@ export default function Register() {
                         </View>
                         <View style={styles.inputContainer}>
                             <Checkbox.Item
-                                label={'Acepto los terminos y condiciones'}
-                                status={terms ? 'checked' : 'unchecked'}
-                                color={'#f6f6f6'}
+                                label={"Acepto los terminos y condiciones"}
+                                status={terms ? "checked" : "unchecked"}
+                                color={"#f6f6f6"}
                                 uncheckedColor="#f6f6f6"
                                 labelStyle={{
-                                    color: '#f6f6f6',
-                                    textAlign: 'center',
+                                    color: "#f6f6f6",
+                                    textAlign: "center",
                                     fontSize: 18,
                                 }}
                                 position="leading"
@@ -685,7 +690,7 @@ export default function Register() {
                         <TouchableOpacity onPress={handleRegister}>
                             <Text
                                 adjustsFontSizeToFit={true}
-                                style={{ color: '#f6f6f6' }}
+                                style={{ color: "#f6f6f6", fontFamily: font }}
                             >
                                 REGISTRARSE
                             </Text>
@@ -699,12 +704,12 @@ export default function Register() {
                             </Text>
                             <TouchableOpacity
                                 onPress={() => {
-                                    router.push('/login');
+                                    router.push("/login");
                                 }}
                             >
                                 <Text
                                     adjustsFontSizeToFit={true}
-                                    style={{ color: '#f6f6f6' }}
+                                    style={{ color: "#f6f6f6", fontFamily: font }}
                                 >
                                     INICIA SESIÓN
                                 </Text>
@@ -729,22 +734,22 @@ const styles = StyleSheet.create({
     modal: {
         height: 100 * vh,
         width: 100 * vw,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'transparent',
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "transparent",
     },
     modalContainer: {
-        height: '80%',
-        justifyContent: 'center',
-        alignItems: 'center',
+        height: "80%",
+        justifyContent: "center",
+        alignItems: "center",
         paddingVertical: 25,
         paddingHorizontal: 25,
-        backgroundColor: '#f6f6f6',
+        backgroundColor: "#f6f6f6",
         borderRadius: 5,
     },
     modalContent: {
-        height: '100%',
-        justifyContent: 'space-around',
+        height: "100%",
+        justifyContent: "space-around",
     },
     view: {
         height: 100 * vh,
@@ -752,9 +757,9 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 95,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#000',
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#000",
     },
     inputContainer: {
         width: 80 * vw,
@@ -762,22 +767,22 @@ const styles = StyleSheet.create({
     },
     switchContainer: {
         marginTop: 15,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
     },
     containerDouble: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flexDirection: "row",
+        justifyContent: "space-between",
     },
     inputDouble: {
-        width: '45%',
+        width: "45%",
     },
     switch: {
-        alignItems: 'center',
+        alignItems: "center",
     },
     input: {
-        backgroundColor: '#f6f6f6',
+        backgroundColor: "#f6f6f6",
         height: 40,
         borderRadius: 5,
         fontSize: 18,
@@ -788,45 +793,49 @@ const styles = StyleSheet.create({
     },
     selectStyle: {
         height: 40,
-        width: '100%',
+        width: "100%",
         borderRadius: 5,
         fontSize: 18,
-        backgroundColor: '#f6f6f6',
+        backgroundColor: "#f6f6f6",
     },
     viewButton: {
-        width: '100%',
+        width: "100%",
         borderRadius: 5,
-        backgroundColor: '#f6f6f6',
+        backgroundColor: "#f6f6f6",
         height: 40,
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: "center",
+        alignItems: "center",
     },
     viewText: {
         fontSize: 18,
-        color: '#000',
+        color: "#000",
+        fontFamily: 'IBMPlexSansJP'
     },
     text: {
         fontSize: 14,
-        color: '#f6f6f6',
+        color: "#f6f6f6",
         marginBottom: 5,
+        fontFamily: 'IBMPlexSansJP'
     },
     inverseText: {
         fontSize: 14,
-        color: '#000',
+        color: "#000",
         marginBottom: 5,
+        fontFamily: 'IBMPlexSansJP'
     },
     registerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center",
         marginVertical: 10,
         gap: 5,
     },
     registerText: {
-        color: '#f6f6f6',
+        color: "#f6f6f6",
+        fontFamily: 'IBMPlexSansJP'
     },
     buttonContainer: {
         marginTop: 20,
-        alignItems: 'center',
+        alignItems: "center",
         paddingBottom: 10,
     },
 });
