@@ -1,5 +1,5 @@
-import fetchApi from '../../constants/fetchApi';
-import activities from '../../fakeData/activities';
+import fetchApi from "../../constants/fetchApi";
+import activities from "../../fakeData/activities";
 
 export default async function getActivities(user_id) {
     try {

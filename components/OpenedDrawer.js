@@ -90,7 +90,7 @@ export default function OpenedDrawer(props) {
                                     if (data.route == "/logout")
                                         return logout(router);
                                     router.push(data.route);
-                                    props.state.history[1].status = "closed";
+                                    // props.state.history[1].status = "closed";
                                 }}
                             >
                                 <Text

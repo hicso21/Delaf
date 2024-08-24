@@ -164,23 +164,78 @@ export default function Stats() {
                 >
                     <ScrollView>
                         {filteredActivities.length > 0 ? (
-                            activitiesVariables.map(
-                                ({ name, variable, measure }, idx) =>
-                                    filteredActivities.every(
-                                        (item) => item[variable] != ""
-                                    ) && (
-                                        <Chart
-                                            key={idx}
-                                            axisX={axisX}
-                                            axisY={filteredActivities.map(
-                                                (item) => item[variable]
-                                            )}
-                                            measureType={measure}
-                                            title={name}
-                                            font={font}
-                                        />
-                                    )
-                            )
+                            <View>
+                                {/* Frecuencia cardíaca */}
+                                {filteredActivities
+                                    .map((item) => item.average_heart_rate)
+                                    .every((item) => item) && (
+                                    <Chart
+                                        axisX={axisX}
+                                        axisY={filteredActivities.map(
+                                            (item) => item.average_heart_rate
+                                        )}
+                                        measureType={"bpm"}
+                                        title={"Frecuencia cardíaca"}
+                                        font={font}
+                                    />
+                                )}
+                                {/* Distancia */}
+                                {filteredActivities
+                                    .map((item) => item.distance)
+                                    .every((item) => item) && (
+                                    <Chart
+                                        axisX={axisX}
+                                        axisY={filteredActivities.map(
+                                            (item) => item.distance
+                                        )}
+                                        measureType={"km"}
+                                        title={"Distancias"}
+                                        font={font}
+                                    />
+                                )}
+                                {/* Cadencia */}
+                                {filteredActivities
+                                    .map((item) => item.average_cadence)
+                                    .every((item) => item) && (
+                                    <Chart
+                                        axisX={axisX}
+                                        axisY={filteredActivities.map(
+                                            (item) => item.average_cadence
+                                        )}
+                                        measureType={""}
+                                        title={"Cadencia"}
+                                        font={font}
+                                    />
+                                )}
+                                {/* Calorias */}
+                                {filteredActivities
+                                    .map((item) => item.calories)
+                                    .every((item) => item) && (
+                                    <Chart
+                                        axisX={axisX}
+                                        axisY={filteredActivities.map(
+                                            (item) => item.calories
+                                        )}
+                                        measureType={"kcal"}
+                                        title={"Calorias"}
+                                        font={font}
+                                    />
+                                )}
+                                {/* Tiempo total */}
+                                {filteredActivities
+                                    .map((item) => item.total_time)
+                                    .every((item) => item) && (
+                                    <Chart
+                                        axisX={axisX}
+                                        axisY={filteredActivities.map(
+                                            (item) => item.total_time
+                                        )}
+                                        measureType={"m"}
+                                        title={"Tiempo total"}
+                                        font={font}
+                                    />
+                                )}
+                            </View>
                         ) : (
                             <View
                                 style={{
