@@ -18,6 +18,7 @@ import setPaid from "../../../utils/api/post/setPaid";
 import getPaid from "../../../utils/api/get/getPaid";
 import useCustomFonts from "../../../hooks/useCustomFonts";
 import AppLoading from "../../../components/AppLoading";
+import parseSpecialChars from "../../../utils/functions/parseSpecialChars";
 
 export default function Payment() {
     const [loading, setLoading] = useState(false);
@@ -40,7 +41,7 @@ export default function Payment() {
             price_data?.unit_amount,
             price_data?.currency,
             user?.email,
-            user?.name
+            parseSpecialChars(user?.name)
         );
 
         if (!response?.paymentIntent)

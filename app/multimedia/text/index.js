@@ -13,6 +13,7 @@ import { Feather } from "@expo/vector-icons";
 import Toast from "react-native-toast-message";
 import useCustomFonts from "../../../hooks/useCustomFonts";
 import AppLoading from "../../../components/AppLoading";
+import toStringWithSpecialChars from "../../../utils/functions/toStringWithSpecialChars";
 
 /* 
 		name: String,
@@ -75,7 +76,7 @@ export default function () {
                     }}
                 >
                     <Text adjustsFontSizeToFit={true} style={styles.itemText}>
-                        {texts[page]?.data?.name}
+                        {toStringWithSpecialChars(texts[page]?.data?.name)}
                     </Text>
                 </View>
                 <ScrollView>
@@ -83,7 +84,9 @@ export default function () {
                         adjustsFontSizeToFit={true}
                         style={styles.itemDescription}
                     >
-                        {texts[page]?.data?.description}
+                        {toStringWithSpecialChars(
+                            texts[page]?.data?.description
+                        )}
                     </Text>
                 </ScrollView>
                 <View

@@ -20,6 +20,7 @@ import fromMillisecondsToTime from "../../../utils/functions/fromMillisecondsToT
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import useCustomFonts from "../../../hooks/useCustomFonts";
 import AppLoading from "../../../components/AppLoading";
+import toStringWithSpecialChars from "../../../utils/functions/toStringWithSpecialChars";
 
 /* 
 		name: String,
@@ -195,7 +196,7 @@ const RenderItem = ({ index, audios }) => {
                 </View>
                 <View style={styles.textContainer}>
                     <Text adjustsFontSizeToFit={true} style={styles.itemText}>
-                        {item?.name}
+                        {toStringWithSpecialChars(item?.name)}
                     </Text>
                     <Text
                         adjustsFontSizeToFit={true}

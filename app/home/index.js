@@ -12,6 +12,7 @@ import getUserData from "../../utils/api/get/getUserData";
 import getAge from "../../utils/functions/getAge";
 import useCustomFonts from "../../hooks/useCustomFonts";
 import AppLoading from "../../components/AppLoading";
+import toStringWithSpecialChars from "../../utils/functions/toStringWithSpecialChars";
 
 export default function Home() {
     const [userData, setUserData] = useState({});
@@ -43,8 +44,8 @@ export default function Home() {
             });
         const { error, data } = await getUserData(user._id);
         if (!error) {
-            mergeData("user", data.data);
-            setUserData(data.data);
+            mergeData("user", data?.data);
+            setUserData(data?.data);
         } else {
             setUserData(user);
         }
@@ -104,7 +105,7 @@ export default function Home() {
                         fontFamily: font,
                     }}
                 >
-                    {userData?.name}
+                    {toStringWithSpecialChars(userData?.name)}
                 </Text>
                 <Text
                     adjustsFontSizeToFit={true}

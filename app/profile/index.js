@@ -20,6 +20,7 @@ import countries from "../../utils/constants/countries";
 import compareTwoObjects from "../../utils/functions/compareTwoObjects";
 import useCustomFonts from "../../hooks/useCustomFonts";
 import AppLoading from "../../components/AppLoading";
+import toStringWithSpecialChars from "../../utils/functions/toStringWithSpecialChars";
 
 export default function Profile() {
     const [userData, setUserData] = useState({});
@@ -38,7 +39,7 @@ export default function Profile() {
             user._id
         );
         setUserData({
-            name: userDataAPI.data.name,
+            name: toStringWithSpecialChars(userDataAPI.data.name),
             email: userDataAPI.data.email,
             weight: userDataAPI.data.weight,
             height: userDataAPI.data.height,
@@ -46,7 +47,7 @@ export default function Profile() {
             city: userDataAPI.data.city,
         });
         setDbUserData({
-            name: userDataAPI.data.name,
+            name: toStringWithSpecialChars(userDataAPI.data.name),
             email: userDataAPI.data.email,
             weight: userDataAPI.data.weight,
             height: userDataAPI.data.height,
@@ -426,19 +427,19 @@ const styles = StyleSheet.create({
     viewText: {
         fontSize: 18,
         color: "#000",
-        fontFamily: 'IBMPlexSansJP'
+        fontFamily: "IBMPlexSansJP",
     },
     text: {
         fontSize: 14,
         color: "#f6f6f6",
         marginBottom: 5,
-        fontFamily: 'IBMPlexSansJP'
+        fontFamily: "IBMPlexSansJP",
     },
     inverseText: {
         fontSize: 14,
         color: "#000",
         marginBottom: 5,
-        fontFamily: 'IBMPlexSansJP'
+        fontFamily: "IBMPlexSansJP",
     },
     registerContainer: {
         flexDirection: "row",
@@ -448,7 +449,7 @@ const styles = StyleSheet.create({
     },
     registerText: {
         color: "#f6f6f6",
-        fontFamily: 'IBMPlexSansJP'
+        fontFamily: "IBMPlexSansJP",
     },
     buttonContainer: {
         marginTop: 20,

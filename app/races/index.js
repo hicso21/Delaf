@@ -11,6 +11,7 @@ import getRaces from "../../utils/api/get/getRaces";
 import standarizeCalendarData from "../../utils/functions/standarizeCalendarData";
 import useCustomFonts from "../../hooks/useCustomFonts";
 import AppLoading from "../../components/AppLoading";
+import toStringWithSpecialChars from "../../utils/functions/toStringWithSpecialChars";
 
 const timeToString = (time) => {
     const date = new Date(time);
@@ -141,9 +142,9 @@ export default function RacesCalendar() {
                         >
                             <Text
                                 adjustsFontSizeToFit={true}
-                                style={{ fontSize: 18,fontFamily: font }}
+                                style={{ fontSize: 18, fontFamily: font }}
                             >
-                                {item?.name}
+                                {toStringWithSpecialChars(item?.name)}
                             </Text>
                             <Avatar.Image
                                 style={{ backgroundColor: "#000" }}

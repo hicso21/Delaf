@@ -26,6 +26,7 @@ import toSeeMeasure from "../../../utils/functions/toSeeMeasure";
 import toSeeSecondMeasure from "../../../utils/functions/toSeeSecondMeasure";
 import useCustomFonts from "../../../hooks/useCustomFonts";
 import AppLoading from "../../../components/AppLoading";
+import toStringWithSpecialChars from "../../../utils/functions/toStringWithSpecialChars";
 
 export default function Activity() {
     const { _id } = useLocalSearchParams();
@@ -370,7 +371,10 @@ export default function Activity() {
                             adjustsFontSizeToFit={true}
                             style={{ fontSize: 24, fontFamily: font }}
                         >
-                            {gifs.find((item) => item._id == gifSelected)?.name}
+                            {toStringWithSpecialChars(
+                                gifs.find((item) => item._id == gifSelected)
+                                    ?.name
+                            )}
                         </Text>
                         <View />
                     </View>

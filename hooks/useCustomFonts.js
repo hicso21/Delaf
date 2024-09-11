@@ -7,3 +7,4 @@ export default useCustomFonts = () => {
     const font = "IBMPlexSansJP";
     return [loaded, error, font];
 };
+ 

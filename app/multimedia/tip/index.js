@@ -7,6 +7,7 @@ import { vh, vw } from "../../../styles/dimensions/dimensions";
 import getTips from "../../../utils/api/get/getTips";
 import useCustomFonts from "../../../hooks/useCustomFonts";
 import AppLoading from "../../../components/AppLoading";
+import toStringWithSpecialChars from "../../../utils/functions/toStringWithSpecialChars";
 
 const RenderItem = ({ item }) => {
     return (
@@ -32,7 +33,7 @@ const RenderItem = ({ item }) => {
                     adjustsFontSizeToFit={true}
                     style={styles.itemDescription}
                 >
-                    {item.data?.description}
+                    {toStringWithSpecialChars(item.data?.description)}
                 </Text>
             </View>
         </View>
@@ -93,12 +94,12 @@ const styles = StyleSheet.create({
         borderTopColor: "#f6f6f6",
         paddingTop: 5,
         textTransform: "lowercase",
-		fontFamily: 'IBMPlexSansJP'
+        fontFamily: "IBMPlexSansJP",
     },
     itemDescription: {
         textAlign: "center",
         fontSize: 28,
         color: "#000",
-		fontFamily: 'IBMPlexSansJP'
+        fontFamily: "IBMPlexSansJP",
     },
 });

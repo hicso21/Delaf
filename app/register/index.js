@@ -26,6 +26,8 @@ import colorRandomizer from "../../utils/functions/colorRandomizer";
 import getAge from "../../utils/functions/getAge";
 import useCustomFonts from "../../hooks/useCustomFonts";
 import AppLoading from "../../components/AppLoading";
+import parseSpecialChars from "../../utils/functions/parseSpecialChars";
+import toStringWithSpecialChars from "../../utils/functions/toStringWithSpecialChars";
 
 export default function Register() {
     const [email, setEmail] = useState("");
@@ -93,7 +95,7 @@ export default function Register() {
             });
 
         setEmail(data.email);
-        setName(data.name);
+        setName(toStringWithSpecialChars(data.name));
         setCode({
             value: code.value,
             modal: false,
@@ -107,7 +109,7 @@ export default function Register() {
                 text1: "Debes aceptar los terminos y condiciones.",
             });
         const runner = {
-            name: name.trim(),
+            name: parseSpecialChars(name.trim()),
             calendar: {
                 races: [],
                 routines: [],
@@ -121,14 +123,14 @@ export default function Register() {
             weight,
             height,
             medication,
-            previous_injuries: issue.text,
-            chronic_illnesses: chronicIllnesses,
+            previous_injuries: parseSpecialChars(issue.text),
+            chronic_illnesses: parseSpecialChars(chronicIllnesses),
             rest_days: JSON.stringify(
                 restDays
-                    .map((item) => item.bool && item.name)
+                    .map((item) => item.bool && parseSpecialChars(item.name))
                     .filter((item) => item != false)
             ),
-            other_activity: anotherActivity.text,
+            other_activity: parseSpecialChars(anotherActivity.text),
             goals,
             bike,
             brand,
@@ -246,7 +248,10 @@ export default function Register() {
                             >
                                 <Text
                                     adjustsFontSizeToFit={true}
-                                    style={{ color: "#f6f6f6", fontFamily: font }}
+                                    style={{
+                                        color: "#f6f6f6",
+                                        fontFamily: font,
+                                    }}
                                 >
                                     Listo
                                 </Text>
@@ -299,7 +304,10 @@ export default function Register() {
                             >
                                 <Text
                                     adjustsFontSizeToFit={true}
-                                    style={{ color: "#f6f6f6", fontFamily: font }}
+                                    style={{
+                                        color: "#f6f6f6",
+                                        fontFamily: font,
+                                    }}
                                 >
                                     Aceptar
                                 </Text>
@@ -709,7 +717,10 @@ export default function Register() {
                             >
                                 <Text
                                     adjustsFontSizeToFit={true}
-                                    style={{ color: "#f6f6f6", fontFamily: font }}
+                                    style={{
+                                        color: "#f6f6f6",
+                                        fontFamily: font,
+                                    }}
                                 >
                                     INICIA SESIÓN
                                 </Text>
@@ -809,19 +820,19 @@ const styles = StyleSheet.create({
     viewText: {
         fontSize: 18,
         color: "#000",
-        fontFamily: 'IBMPlexSansJP'
+        fontFamily: "IBMPlexSansJP",
     },
     text: {
         fontSize: 14,
         color: "#f6f6f6",
         marginBottom: 5,
-        fontFamily: 'IBMPlexSansJP'
+        fontFamily: "IBMPlexSansJP",
     },
     inverseText: {
         fontSize: 14,
         color: "#000",
         marginBottom: 5,
-        fontFamily: 'IBMPlexSansJP'
+        fontFamily: "IBMPlexSansJP",
     },
     registerContainer: {
         flexDirection: "row",
@@ -831,7 +842,7 @@ const styles = StyleSheet.create({
     },
     registerText: {
         color: "#f6f6f6",
-        fontFamily: 'IBMPlexSansJP'
+        fontFamily: "IBMPlexSansJP",
     },
     buttonContainer: {
         marginTop: 20,

@@ -15,6 +15,7 @@ import { vh, vw } from "../../../styles/dimensions/dimensions";
 import getVideos from "../../../utils/api/get/getVideos";
 import useCustomFonts from "../../../hooks/useCustomFonts";
 import AppLoading from "../../../components/AppLoading";
+import toStringWithSpecialChars from "../../../utils/functions/toStringWithSpecialChars";
 
 /* 
 		name: String,
@@ -101,7 +102,7 @@ const RenderItem = ({ item }) => {
                         }
                     />
                     <Text adjustsFontSizeToFit={true} style={styles.itemText}>
-                        {item?.data?.name}
+                        {toStringWithSpecialChars(item?.data?.name)}
                     </Text>
                     <View
                         style={{ maxHeight: `calc(100% - 41 - ${100 * vw})` }}
@@ -111,7 +112,9 @@ const RenderItem = ({ item }) => {
                                 adjustsFontSizeToFit={true}
                                 style={styles.itemDescription}
                             >
-                                {item?.data?.description}
+                                {toStringWithSpecialChars(
+                                    item?.data?.description
+                                )}
                             </Text>
                         </ScrollView>
                     </View>
@@ -120,14 +123,14 @@ const RenderItem = ({ item }) => {
                 <View style={styles.itemContainer}>
                     <View style={styles.video} />
                     <Text adjustsFontSizeToFit={true} style={styles.itemText}>
-                        {item?.data?.name}
+                        {toStringWithSpecialChars(item?.data?.name)}
                     </Text>
                     <ScrollView>
                         <Text
                             adjustsFontSizeToFit={true}
                             style={styles.itemDescription}
                         >
-                            {item?.data?.description}
+                            {toStringWithSpecialChars(item?.data?.description)}
                         </Text>
                     </ScrollView>
                 </View>
