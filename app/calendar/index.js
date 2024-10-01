@@ -210,7 +210,7 @@ export default function Schedule() {
 
     const fetch = async () => {
         const user = await getData("user");
-        const data = await s(user._id);
+        const data = await getUserEvents(user._id);
         setEvents(data?.data);
         if (data?.error)
             return Toast.show({
@@ -296,7 +296,10 @@ export default function Schedule() {
                             };
 
                             return (
-                                <TouchableOpacity onPress={onPress}>
+                                <TouchableOpacity
+                                    onPress={onPress}
+                                    key={event._id}
+                                >
                                     <Card
                                         style={{ backgroundColor: "#0c0c0c" }}
                                     >

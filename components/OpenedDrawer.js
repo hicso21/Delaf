@@ -87,10 +87,12 @@ export default function OpenedDrawer(props) {
                                 key={data.id}
                                 style={style.li}
                                 onPress={() => {
+                                    if (props.state.history[1].status)
+                                        props.state.history[1].status =
+                                            "closed";
                                     if (data.route == "/logout")
                                         return logout(router);
                                     router.push(data.route);
-                                    // props.state.history[1].status = "closed";
                                 }}
                             >
                                 <Text

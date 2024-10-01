@@ -1,4 +1,10 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import {
+    Entypo,
+    FontAwesome,
+    FontAwesome6,
+    MaterialIcons,
+    SimpleLineIcons,
+} from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
@@ -499,7 +505,7 @@ export default function Activity() {
                         </View>
                         <View
                             style={{
-                                height: 60 * vh,
+                                height: 65 * vh,
                                 width: 95 * vw,
                             }}
                         >
@@ -509,6 +515,39 @@ export default function Activity() {
                                 estimatedItemSize={50}
                             />
                         </View>
+
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: 4,
+                            }}
+                        >
+                            {routine?.completed ? (
+                                <FontAwesome
+                                    name="check"
+                                    size={18}
+                                    color="black"
+                                />
+                            ) : (
+                                <Entypo
+                                    name="dot-single"
+                                    size={18}
+                                    color="black"
+                                />
+                            )}
+                            <Text
+                                adjustsFontSizeToFit={true}
+                                style={{ fontFamily: font }}
+                            >
+                                {`Rutina ${
+                                    routine?.completed
+                                        ? "completa"
+                                        : "incompleta"
+                                }`}
+                            </Text>
+                        </View>
+
                         {/* {pdf && (
 							<View>
 								<TouchableOpacity onPress={downloadPDF}>
@@ -518,7 +557,7 @@ export default function Activity() {
 								</TouchableOpacity>
 							</View>
 						)} */}
-                        <View>
+                        {/* <View>
                             <TouchableOpacity onPress={onConfirmationModalOpen}>
                                 <Text
                                     adjustsFontSizeToFit={true}
@@ -527,7 +566,7 @@ export default function Activity() {
                                     Ya completaste tu rutina?
                                 </Text>
                             </TouchableOpacity>
-                        </View>
+                        </View> */}
                     </>
                 )}
             </View>

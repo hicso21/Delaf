@@ -152,7 +152,7 @@ export default function () {
                 text1: "Ocurrió un error, por favor contáctanos.",
             });
         if (data.length) setVideos(data);
-        else Toast.show({ type: "info", text1: "Aún no hay videos" });
+        // else Toast.show({ type: "info", text1: "Aún no hay videos" });
     };
 
     useFocusEffect(
