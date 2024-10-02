@@ -1,5 +1,5 @@
 import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import {
     Alert,
     Image,
@@ -18,6 +18,7 @@ import useCustomFonts from "../hooks/useCustomFonts.js";
 import AppLoading from "./AppLoading.js";
 
 export default function OpenedDrawer(props) {
+    const navigation = useNavigation();
     const [redirectButtons, setRedirectButtons] = useState([
         { id: 0, text: "PERFIL", route: "/profile" },
         // { id: 1, text: 'ACTIVIDADES', route: '/activities' },
@@ -35,12 +36,20 @@ export default function OpenedDrawer(props) {
 
     const logout = async (router) => {
         const isUserDataDeleted = await clearData("user");
-        if (isUserDataDeleted) router.push("/login");
-        else
+        if (isUserDataDeleted) {
+            navigation.closeDrawer();
+            setTimeout(() => router.push("/login"), 100);
+        } else {
             Alert.alert(
                 "Error",
                 "Ocurrió un error al cerrar sesión. \n Intenta de nuevo"
             );
+        }
+    };
+
+    const handleNavigation = (route) => {
+        navigation.closeDrawer();
+        setTimeout(() => router.push(route), 100);
     };
 
     const fetch = async () => {
@@ -87,12 +96,8 @@ export default function OpenedDrawer(props) {
                                 key={data.id}
                                 style={style.li}
                                 onPress={() => {
-                                    if (props.state.history[1].status)
-                                        props.state.history[1].status =
-                                            "closed";
-                                    if (data.route == "/logout")
-                                        return logout(router);
-                                    router.push(data.route);
+                                    if (data.route === "/logout") logout();
+                                    else handleNavigation(data.route);
                                 }}
                             >
                                 <Text
@@ -101,7 +106,7 @@ export default function OpenedDrawer(props) {
                                 >
                                     {data.text}
                                 </Text>
-                                {data.route == "/logout" ? (
+                                {data.route === "/logout" ? (
                                     <SimpleLineIcons
                                         name="logout"
                                         size={ARROW_SIZE}
