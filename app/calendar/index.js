@@ -135,8 +135,9 @@ export default function Schedule() {
                         <View
                             style={{
                                 flexDirection: "row",
-                                justifyContent: "space-between",
+                                justifyContent: "center",
                                 alignItems: "center",
+                                height: 50,
                             }}
                         >
                             <Text
@@ -152,9 +153,13 @@ export default function Schedule() {
                                         item.routines > 1 ? "s" : ""
                                     }`}
                                 {item.nutrition > 0
-                                    ? `${item.races > 0 ? ", " : " y "}${
-                                          item.nutrition
-                                      } nutrición${
+                                    ? `${
+                                          item.routines == 0
+                                              ? ""
+                                              : item.races > 0
+                                              ? ", "
+                                              : " y "
+                                      }${item.nutrition} nutrición${
                                           item.nutrition > 1 ? "s" : ""
                                       }`
                                     : ""}
@@ -164,43 +169,6 @@ export default function Schedule() {
                                       }`
                                     : ""}
                             </Text>
-                            <View
-                                style={{
-                                    backgroundColor: item.completed
-                                        ? "#2b9348"
-                                        : "#000",
-                                    borderColor: "#f6f6f6",
-                                    borderWidth: 1,
-                                    height: 50,
-                                    width: 50,
-                                    borderRadius: 50,
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
-                                {item.type == "routine" && (
-                                    <MaterialCommunityIcons
-                                        name="dumbbell"
-                                        size={24}
-                                        color="#f6f6f6"
-                                    />
-                                )}
-                                {item.type == "nutrition" && (
-                                    <MaterialCommunityIcons
-                                        name="food-apple"
-                                        size={24}
-                                        color="#f6f6f6"
-                                    />
-                                )}
-                                {item.type == "race" && (
-                                    <FontAwesome
-                                        name="flag-checkered"
-                                        size={24}
-                                        color="#f6f6f6"
-                                    />
-                                )}
-                            </View>
                         </View>
                     </Card.Content>
                 </Card>
@@ -280,7 +248,7 @@ export default function Schedule() {
                             maxWidth: 90 * vw,
                             marginHorizontal: 5 * vw,
                             padding: 20,
-                            borderRadius: 15,
+                            borderRadius: 10,
                             gap: 20,
                         }}
                     >

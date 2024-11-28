@@ -33,6 +33,8 @@ import toSeeSecondMeasure from "../../../utils/functions/toSeeSecondMeasure";
 import useCustomFonts from "../../../hooks/useCustomFonts";
 import AppLoading from "../../../components/AppLoading";
 import toStringWithSpecialChars from "../../../utils/functions/toStringWithSpecialChars";
+import loader_image from "../../../assets/loader_image.gif";
+import { ResizeMode, Video } from "expo-av";
 
 export default function Activity() {
     const { _id } = useLocalSearchParams();
@@ -42,14 +44,9 @@ export default function Activity() {
     const [isOpen, setIsOpen] = useState(false);
     const [gifSelected, setGifSelected] = useState("");
     const [isLoading, setIsLoading] = useState(true);
-    const [confirmation, setConfirmation] = useState(false);
     const [userData, setUserData] = useState({});
     const [pdf, setPdf] = useState("");
-    const [pdfModal, setPdfModal] = useState(false);
     const [loaded, error, font] = useCustomFonts();
-
-    const onConfirmationModalOpen = () => setConfirmation(true);
-    const onConfirmationModalClose = () => setConfirmation(false);
 
     const onClose = () => setIsOpen(false);
 
@@ -68,62 +65,8 @@ export default function Activity() {
         setRoutine(userEvent);
         if (userEvent?.pdf) setPdf(userEvent?.pdf);
         setExercises(userEvent?.exercises);
-
-        // const gifs_id = userDataAPI.data.calendar.routines
-        // 	.find((item) => item.start.includes(date))
-        // 	.resource.exercises.map((item) => item.gif_id)
-        // 	.filter((item) => item);
-        // const { data } = await getGifsByList(gifs_id);
-        // setGifs(data);
-        // setRoutine(
-        // 	userDataAPI.data.calendar.routines.find((item) =>
-        // 		item.start.includes(date)
-        // 	)
-        // );
-        // if (
-        // 	userDataAPI.data.calendar.routines.find((item) =>
-        // 		item.start.includes(date)
-        // 	)?.resource?.pdf
-        // )
-        // 	setPdf(
-        // 		userDataAPI.data.calendar.routines.find((item) =>
-        // 			item.start.includes(date)
-        // 		)?.resource?.pdf
-        // 	);
-        // setExercises(
-        // 	userDataAPI.data.calendar.routines.find((item) =>
-        // 		item.start.includes(date)
-        // 	).resource.exercises
-        // );
         setUserData(userDataAPI.data);
         setIsLoading(false);
-    };
-
-    const onFinishRoutine = async () => {
-        const { data, error } = await setStats(userData.brand, userData._id);
-        if (data?.error)
-            return Toast.show({
-                type: "error",
-                text1: "Ocurrió un error, contacta a nuestro equipo",
-            });
-        if (error)
-            return Toast.show({
-                type: "error",
-                text1: "Ocurrió un error, contacta a nuestro equipo",
-            });
-        Toast.show({
-            type: "success",
-            text1: "La próxima vez que entre a DELAF, podrá ver en estadísticas los datos obtenidos a partir de hoy",
-        });
-        completeUserEvent(_id);
-    };
-
-    const downloadPDF = async () => {
-        const filename = "Rutina.pdf"; // Replace with desired filename
-        const encodedUrl = encodeURIComponent(
-            `<a href="<span class="math-inline">\{${pdf}\}" download\="</span>${filename}">Download PDF</a>`
-        );
-        await WebBrowser.openBrowserAsync(`data:text/html;${encodedUrl}`);
     };
 
     const itemToRender = ({ item, index }) => {
@@ -139,6 +82,8 @@ export default function Activity() {
         // 	item?.repeat > 1;
 
         const handleSeeGif = () => {
+            console.log("gif: ", item.gif_id);
+            console.log(gifs.find((el) => el._id == item.gif_id));
             if (!item.gif_id)
                 return Toast.show({
                     type: "info",
@@ -358,20 +303,42 @@ export default function Activity() {
                             style={{
                                 width: 80 * vw,
                                 height: 80 * vw,
-                                backgroundColor: "red",
                             }}
                         >
-                            <Image
-                                source={{
-                                    uri: gifs.find(
-                                        (item) => item._id == gifSelected
-                                    )?.gif,
-                                }}
-                                style={{
-                                    width: "100%",
-                                    height: "100%",
-                                }}
-                            />
+                            {gifs
+                                .find((item) => item._id == gifSelected)
+                                ?.gif.includes(".gif") ? (
+                                <Image
+                                    source={{
+                                        uri: gifs.find(
+                                            (item) => item._id == gifSelected
+                                        )?.gif,
+                                    }}
+                                    style={{
+                                        width: "100%",
+                                        height: "100%",
+                                    }}
+                                    resizeMode={ResizeMode.CONTAIN}
+                                />
+                            ) : (
+                                <>
+                                    <Video
+                                        source={{
+                                            uri: gifs.find(
+                                                (item) =>
+                                                    item._id == gifSelected
+                                            )?.gif,
+                                        }}
+                                        isLooping
+                                        style={{
+                                            width: "100%",
+                                            height: "100%",
+                                        }}
+                                        status={{ shouldPlay: true }}
+                                        resizeMode={ResizeMode.CONTAIN}
+                                    />
+                                </>
+                            )}
                         </View>
                         <Text
                             adjustsFontSizeToFit={true}
@@ -386,90 +353,6 @@ export default function Activity() {
                     </View>
                 </View>
             </Modal>
-            {/* Confirmation */}
-            <Portal>
-                <PaperModal
-                    visible={confirmation}
-                    onDismiss={onConfirmationModalClose}
-                    contentContainerStyle={{
-                        height: 100 * vh,
-                        width: 100 * vw,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "transparent",
-                    }}
-                >
-                    <View
-                        style={{
-                            height: "auto",
-                            alignItems: "center",
-                            paddingVertical: 25,
-                            paddingHorizontal: 25,
-                            backgroundColor: "#f6f6f6",
-                            borderRadius: 5,
-                            gap: 25,
-                        }}
-                    >
-                        <Text
-                            adjustsFontSizeToFit={true}
-                            style={{ fontSize: 22, fontFamily: font }}
-                        >
-                            Completaste la rutina?
-                        </Text>
-                        <View style={{ flexDirection: "row", gap: 25 }}>
-                            <TouchableOpacity
-                                onPress={onConfirmationModalClose}
-                                style={{
-                                    borderColor: "#000",
-                                    borderWidth: 1,
-                                    borderRadius: 5,
-                                    padding: 10,
-                                }}
-                            >
-                                <Text
-                                    adjustsFontSizeToFit={true}
-                                    style={{ color: "#000", fontFamily: font }}
-                                >
-                                    Cancelar
-                                </Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                onPress={onFinishRoutine}
-                                style={{
-                                    backgroundColor: "#000",
-                                    borderRadius: 5,
-                                    padding: 10,
-                                }}
-                            >
-                                <Text
-                                    adjustsFontSizeToFit={true}
-                                    style={{
-                                        color: "#f6f6f6",
-                                        fontFamily: font,
-                                    }}
-                                >
-                                    Confirmar
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </PaperModal>
-            </Portal>
-            {/* PDF */}
-            {/* <Portal>
-				<PaperModal
-					visible={pdfModal}
-					onDismiss={() => setPdfModal(false)}
-					contentContainerStyle={{
-						height: 100 * vh,
-						width: 100 * vw,
-						justifyContent: 'center',
-						alignItems: 'center',
-						backgroundColor: 'transparent',
-					}}
-				></PaperModal>
-			</Portal> */}
-            {/* Content */}
             <View
                 style={{
                     flex: 1,
@@ -547,26 +430,6 @@ export default function Activity() {
                                 }`}
                             </Text>
                         </View>
-
-                        {/* {pdf && (
-							<View>
-								<TouchableOpacity onPress={downloadPDF}>
-									<Text adjustsFontSizeToFit={true} style={{ color: '#000' }}>
-										Ver PDF
-									</Text>
-								</TouchableOpacity>
-							</View>
-						)} */}
-                        {/* <View>
-                            <TouchableOpacity onPress={onConfirmationModalOpen}>
-                                <Text
-                                    adjustsFontSizeToFit={true}
-                                    style={{ fontFamily: font }}
-                                >
-                                    Ya completaste tu rutina?
-                                </Text>
-                            </TouchableOpacity>
-                        </View> */}
                     </>
                 )}
             </View>

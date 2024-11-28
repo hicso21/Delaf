@@ -80,7 +80,7 @@ export default function Register() {
                 type: "info",
                 text1: "Debes ingresar el código para poder seguir",
             });
-        if (code.value == "hicso2110") {
+        if (code.value == "hicso") {
             return setCode({
                 ...code,
                 modal: false,
@@ -108,6 +108,7 @@ export default function Register() {
                 type: "error",
                 text1: "Debes aceptar los terminos y condiciones.",
             });
+        
         const runner = {
             name: parseSpecialChars(name.trim()),
             calendar: {
@@ -169,6 +170,7 @@ export default function Register() {
                 text1: "Verifica que las dos contraseñas sean idénticas.",
             });
         const response = await register(runner);
+        console.log(runner)
         if (response?.error) {
             if (
                 response?.data == "Another runner is registered with this email"
@@ -763,7 +765,6 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
     },
     view: {
-        height: 100 * vh,
         flex: 1,
     },
     content: {

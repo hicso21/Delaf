@@ -1,24 +1,16 @@
 import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
 import { router, useNavigation } from "expo-router";
-import {
-    Alert,
-    Image,
-    Pressable,
-    Text,
-    TouchableOpacity,
-    View,
-} from "react-native";
-import profilePicture from "../assets/DELAF.png";
-import { ARROW_SIZE, style } from "../styles/openedDrawer.js";
-import StatusBar from "./StatusBar";
-import getData from "../utils/AsyncStorage/getData.js";
 import { useEffect, useState } from "react";
-import clearData from "../utils/AsyncStorage/clearData.js";
+import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
+import profilePicture from "../assets/DELAF.png";
 import useCustomFonts from "../hooks/useCustomFonts.js";
+import { ARROW_SIZE, style } from "../styles/openedDrawer.js";
+import clearData from "../utils/AsyncStorage/clearData.js";
+import getData from "../utils/AsyncStorage/getData.js";
 import AppLoading from "./AppLoading.js";
+import StatusBar from "./StatusBar";
 
 export default function OpenedDrawer(props) {
-    const navigation = useNavigation();
     const [redirectButtons, setRedirectButtons] = useState([
         { id: 0, text: "PERFIL", route: "/profile" },
         // { id: 1, text: 'ACTIVIDADES', route: '/activities' },
@@ -34,10 +26,10 @@ export default function OpenedDrawer(props) {
 
     if (!loaded || error) return <AppLoading />;
 
-    const logout = async (router) => {
+    const logout = async () => {
         const isUserDataDeleted = await clearData("user");
         if (isUserDataDeleted) {
-            navigation.closeDrawer();
+            props.navigation.closeDrawer();
             setTimeout(() => router.push("/login"), 100);
         } else {
             Alert.alert(
@@ -48,7 +40,7 @@ export default function OpenedDrawer(props) {
     };
 
     const handleNavigation = (route) => {
-        navigation.closeDrawer();
+        props.navigation.closeDrawer();
         setTimeout(() => router.push(route), 100);
     };
 
@@ -96,8 +88,11 @@ export default function OpenedDrawer(props) {
                                 key={data.id}
                                 style={style.li}
                                 onPress={() => {
-                                    if (data.route === "/logout") logout();
-                                    else handleNavigation(data.route);
+                                    if (data.route === "/logout") {
+                                        logout();
+                                    } else {
+                                        handleNavigation(data.route);
+                                    }
                                 }}
                             >
                                 <Text

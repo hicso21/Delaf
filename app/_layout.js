@@ -114,30 +114,19 @@ export default function RootLayout() {
                             backgroundColor={"#000"}
                         />
                         <Drawer
-                            drawerContent={OpenedDrawer}
+                            drawerContent={(props) => <OpenedDrawer {...props} />}
                             backBehavior="none"
                             defaultStatus="closed"
                             screenOptions={{
                                 headerTintColor: "#f6f6f6",
                                 headerStyle: {
                                     height: 11 * vh,
-                                    borderBottomWidth:
-                                        11 * vh - Constants.statusBarHeight,
+                                    borderBottomWidth: 11 * vh - Constants.statusBarHeight,
                                     borderBottomColor: "#000",
                                 },
-                                headerTitle: routes(path)
-                                    ? routes(path)
-                                    : "TU RUTINA DEL DÍA",
-                                headerShown: pathToExclude.some((item) =>
-                                    path.includes(item)
-                                )
-                                    ? false
-                                    : true,
-                                swipeEnabled: pathToExclude.some((item) =>
-                                    path.includes(item)
-                                )
-                                    ? false
-                                    : true,
+                                headerTitle: routes(path) ? routes(path) : "TU RUTINA DEL DÍA",
+                                headerShown: pathToExclude.some((item) => path.includes(item)) ? false : true,
+                                swipeEnabled: pathToExclude.some((item) => path.includes(item)) ? false : true,
                             }}
                         />
                         {!pathToExclude.some((item) => path.includes(item)) && (
