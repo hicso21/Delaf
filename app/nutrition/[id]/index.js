@@ -6,6 +6,7 @@ import { vh } from "../../../styles/dimensions/dimensions";
 import { Surface } from "react-native-paper";
 import useCustomFonts from "../../../hooks/useCustomFonts";
 import AppLoading from "../../../components/AppLoading";
+import toStringWithSpecialChars from "../../../utils/functions/toStringWithSpecialChars";
 
 export default function Nutrition() {
     const [texts, setTexts] = useState([]);
@@ -63,8 +64,10 @@ export default function Nutrition() {
 
     const fetch = async () => {
         const nutrition = await getUserEvent(event_id);
-        setTexts(parseText(nutrition.data.resource.text));
-        console.log(nutrition.data.start);
+        console.log(nutrition);
+        setTexts(
+            parseText(toStringWithSpecialChars(nutrition.data.resource.text))
+        );
         setDate(nutrition.data.start);
     };
 
@@ -111,7 +114,7 @@ export default function Nutrition() {
                                     fontFamily: font,
                                 }}
                             >
-                                {"breakline"}
+                                {"\n"}
                             </Text>
                         ) : (
                             paragraphs
