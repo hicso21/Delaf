@@ -305,9 +305,22 @@ export default function Activity() {
                                 height: 80 * vw,
                             }}
                         >
-                            {gifs
+                            {!gifs
                                 .find((item) => item._id == gifSelected)
-                                ?.gif.includes(".gif") ? (
+                                ?.gif?.includes(".jpg") ||
+                            !gifs
+                                .find((item) => item._id == gifSelected)
+                                ?.gif?.includes(".gif") ? (
+                                <Video
+                                    source={{
+                                        uri: gifs.find(
+                                            (item) => item._id == gifSelected
+                                        )?.gif,
+                                    }}
+                                    isLooping
+                                    resizeMode={ResizeMode.CONTAIN}
+                                />
+                            ) : (
                                 <Image
                                     source={{
                                         uri: gifs.find(
@@ -320,24 +333,6 @@ export default function Activity() {
                                     }}
                                     resizeMode={ResizeMode.CONTAIN}
                                 />
-                            ) : (
-                                <>
-                                    <Video
-                                        source={{
-                                            uri: gifs.find(
-                                                (item) =>
-                                                    item._id == gifSelected
-                                            )?.gif,
-                                        }}
-                                        isLooping
-                                        style={{
-                                            width: "100%",
-                                            height: "100%",
-                                        }}
-                                        status={{ shouldPlay: true }}
-                                        resizeMode={ResizeMode.CONTAIN}
-                                    />
-                                </>
                             )}
                         </View>
                         <Text
