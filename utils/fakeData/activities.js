@@ -45,7 +45,7 @@ function generateRunsData() {
             estimated_liquid_loss: "",
             average_temperature: Math.floor(Math.random() * (30 - 10 + 1)) + 10,
             paces: [],
-            triathlonData: [],
+            triathlon_data: [],
             description: "",
         });
     }

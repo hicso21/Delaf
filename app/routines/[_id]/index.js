@@ -1,13 +1,7 @@
-import {
-    Entypo,
-    FontAwesome,
-    FontAwesome6,
-    MaterialIcons,
-    SimpleLineIcons,
-} from "@expo/vector-icons";
+import { Entypo, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { FlashList } from "@shopify/flash-list";
+import { ResizeMode, Video } from "expo-av";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
-import * as WebBrowser from "expo-web-browser";
 import { useCallback, useState } from "react";
 import {
     ActivityIndicator,
@@ -17,24 +11,19 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import { Modal as PaperModal, Portal } from "react-native-paper";
 import Toast from "react-native-toast-message";
+import AppLoading from "../../../components/AppLoading";
+import useCustomFonts from "../../../hooks/useCustomFonts";
 import { vh, vw } from "../../../styles/dimensions/dimensions";
 import getData from "../../../utils/AsyncStorage/getData";
 import getGifsByList from "../../../utils/api/get/getGifsByList";
 import getUserData from "../../../utils/api/get/getUserData";
 import getUserEvent from "../../../utils/api/get/getUserEvent";
-import setStats from "../../../utils/api/post/setStats";
-import completeUserEvent from "../../../utils/api/put/completeUserEvent";
 import { namesDefinitions } from "../../../utils/constants/names";
 import { rythmsDefinitions } from "../../../utils/constants/rythms";
 import toSeeMeasure from "../../../utils/functions/toSeeMeasure";
 import toSeeSecondMeasure from "../../../utils/functions/toSeeSecondMeasure";
-import useCustomFonts from "../../../hooks/useCustomFonts";
-import AppLoading from "../../../components/AppLoading";
 import toStringWithSpecialChars from "../../../utils/functions/toStringWithSpecialChars";
-import loader_image from "../../../assets/loader_image.gif";
-import { ResizeMode, Video } from "expo-av";
 
 export default function Activity() {
     const { _id } = useLocalSearchParams();
@@ -76,10 +65,6 @@ export default function Activity() {
         const isLastRepeat =
             (exercises[index + 1]?.repeat == 1 || !exercises[index + 1]) &&
             item?.repeat > 1;
-        // const isMidRepeat =
-        // 	exercises[index + 1]?.repeat > 1 &&
-        // 	exercises[index - 1]?.repeat > 1 &&
-        // 	item?.repeat > 1;
 
         const handleSeeGif = () => {
             console.log("gif: ", item.gif_id);
@@ -307,7 +292,7 @@ export default function Activity() {
                         >
                             {!gifs
                                 .find((item) => item._id == gifSelected)
-                                ?.gif?.includes(".jpg") ||
+                                ?.gif?.includes(".jpg") &&
                             !gifs
                                 .find((item) => item._id == gifSelected)
                                 ?.gif?.includes(".gif") ? (
