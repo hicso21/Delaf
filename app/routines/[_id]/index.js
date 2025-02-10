@@ -74,7 +74,7 @@ export default function Activity() {
                     type: "info",
                     text1: "Este item no contiene un gif para ver.",
                 });
-            setGifSelected(item.gif_id);
+            setGifSelected(gifs.find((el) => el._id == item.gif_id));
             setIsOpen(true);
         };
 
@@ -290,17 +290,11 @@ export default function Activity() {
                                 height: 80 * vw,
                             }}
                         >
-                            {!gifs
-                                .find((item) => item._id == gifSelected)
-                                ?.gif?.includes(".jpg") &&
-                            !gifs
-                                .find((item) => item._id == gifSelected)
-                                ?.gif?.includes(".gif") ? (
+                            {gifSelected?.gif?.includes(".mp4") ||
+                            gifSelected?.gif?.includes(".mov") ? (
                                 <Video
                                     source={{
-                                        uri: gifs.find(
-                                            (item) => item._id == gifSelected
-                                        )?.gif,
+                                        uri: gifSelected?.gif,
                                     }}
                                     isLooping
                                     resizeMode={ResizeMode.CONTAIN}
@@ -308,9 +302,7 @@ export default function Activity() {
                             ) : (
                                 <Image
                                     source={{
-                                        uri: gifs.find(
-                                            (item) => item._id == gifSelected
-                                        )?.gif,
+                                        uri: gifSelected?.gif,
                                     }}
                                     style={{
                                         width: "100%",
