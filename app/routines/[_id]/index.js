@@ -290,6 +290,11 @@ export default function Activity() {
                                 height: 80 * vw,
                             }}
                         >
+                            <Text>
+                                {Boolean(gifSelected?.gif)
+                                    ? gifSelected?.gif
+                                    : "false"}
+                            </Text>
                             {gifSelected?.gif?.includes(".mp4") ||
                             gifSelected?.gif?.includes(".mov") ? (
                                 <Video
