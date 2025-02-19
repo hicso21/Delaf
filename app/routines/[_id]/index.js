@@ -108,9 +108,9 @@ export default function Activity() {
                             <Text>
                                 {Boolean(gifSelected?.gif)
                                     ? gifSelected?.gif.replace(
-                                        "http://res",
-                                        "https://res"
-                                    )
+                                          "http://res",
+                                          "https://res"
+                                      )
                                     : "false"}
                             </Text>
                             {gifSelected?.gif?.includes(".mp4") ||
@@ -138,13 +138,26 @@ export default function Activity() {
                             ) : (
                                 <Image
                                     source={{
-                                        uri: gifSelected?.gif,
+                                        uri: gifSelected?.gif.replace(
+                                            "http://res",
+                                            "https://res"
+                                        ),
                                     }}
                                     style={{
                                         width: "100%",
                                         height: "100%",
                                     }}
                                     resizeMode={ResizeMode.CONTAIN}
+                                    onError={(error) =>
+                                        Toast.show({
+                                            type: "error",
+                                            text1:
+                                                typeof error === "string"
+                                                    ? error
+                                                    : "No",
+                                            text2: JSON.stringify(error),
+                                        })
+                                    }
                                 />
                             )}
                         </View>
