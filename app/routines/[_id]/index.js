@@ -58,6 +58,112 @@ export default function Activity() {
         setIsLoading(false);
     };
 
+    const MediaModal = () => {
+        return (
+            <Modal
+                animationType="slide"
+                visible={isOpen}
+                onRequestClose={onClose}
+            >
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: "#000",
+                    }}
+                >
+                    <View
+                        style={{
+                            width: "90%",
+                            height: "70%",
+                            backgroundColor: "#f6f6f6",
+                            borderRadius: 5,
+                            padding: 10,
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                        }}
+                    >
+                        <View
+                            style={{
+                                width: "100%",
+                                alignItems: "flex-end",
+                            }}
+                        >
+                            <TouchableOpacity onPress={onClose}>
+                                <MaterialIcons
+                                    name="close"
+                                    color="#000"
+                                    size={30}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                        <View />
+                        <View
+                            style={{
+                                width: 80 * vw,
+                                height: 80 * vw,
+                            }}
+                        >
+                            <Text>
+                                {Boolean(gifSelected?.gif)
+                                    ? gifSelected?.gif.replace(
+                                        "http://res",
+                                        "https://res"
+                                    )
+                                    : "false"}
+                            </Text>
+                            {gifSelected?.gif?.includes(".mp4") ||
+                            gifSelected?.gif?.includes(".mov") ? (
+                                <Video
+                                    source={{
+                                        uri: gifSelected?.gif.replace(
+                                            "http://res",
+                                            "https://res"
+                                        ),
+                                    }}
+                                    isLooping
+                                    resizeMode={ResizeMode.CONTAIN}
+                                    onError={(error) =>
+                                        Toast.show({
+                                            type: "error",
+                                            text1:
+                                                typeof error === "string"
+                                                    ? error
+                                                    : "No",
+                                            text2: JSON.stringify(error),
+                                        })
+                                    }
+                                />
+                            ) : (
+                                <Image
+                                    source={{
+                                        uri: gifSelected?.gif,
+                                    }}
+                                    style={{
+                                        width: "100%",
+                                        height: "100%",
+                                    }}
+                                    resizeMode={ResizeMode.CONTAIN}
+                                />
+                            )}
+                        </View>
+                        <Text
+                            adjustsFontSizeToFit={true}
+                            style={{ fontSize: 24, fontFamily: font }}
+                        >
+                            {toStringWithSpecialChars(
+                                gifs.find((item) => item._id == gifSelected)
+                                    ?.name
+                            )}
+                        </Text>
+                        <View />
+                    </View>
+                </View>
+            </Modal>
+        );
+    };
+
     const itemToRender = ({ item, index }) => {
         const isFirstRepeat = exercises[index - 1]
             ? exercises[index - 1]?.repeat == 1 && item?.repeat > 1
@@ -245,91 +351,7 @@ export default function Activity() {
     return (
         <>
             {/* GIF */}
-            <Modal
-                animationType="slide"
-                visible={isOpen}
-                onRequestClose={onClose}
-            >
-                <View
-                    style={{
-                        flex: 1,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "#000",
-                    }}
-                >
-                    <View
-                        style={{
-                            width: "90%",
-                            height: "70%",
-                            backgroundColor: "#f6f6f6",
-                            borderRadius: 5,
-                            padding: 10,
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                        }}
-                    >
-                        <View
-                            style={{
-                                width: "100%",
-                                alignItems: "flex-end",
-                            }}
-                        >
-                            <TouchableOpacity onPress={onClose}>
-                                <MaterialIcons
-                                    name="close"
-                                    color="#000"
-                                    size={30}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                        <View />
-                        <View
-                            style={{
-                                width: 80 * vw,
-                                height: 80 * vw,
-                            }}
-                        >
-                            <Text>
-                                {Boolean(gifSelected?.gif)
-                                    ? gifSelected?.gif
-                                    : "false"}
-                            </Text>
-                            {gifSelected?.gif?.includes(".mp4") ||
-                            gifSelected?.gif?.includes(".mov") ? (
-                                <Video
-                                    source={{
-                                        uri: gifSelected?.gif,
-                                    }}
-                                    isLooping
-                                    resizeMode={ResizeMode.CONTAIN}
-                                />
-                            ) : (
-                                <Image
-                                    source={{
-                                        uri: gifSelected?.gif,
-                                    }}
-                                    style={{
-                                        width: "100%",
-                                        height: "100%",
-                                    }}
-                                    resizeMode={ResizeMode.CONTAIN}
-                                />
-                            )}
-                        </View>
-                        <Text
-                            adjustsFontSizeToFit={true}
-                            style={{ fontSize: 24, fontFamily: font }}
-                        >
-                            {toStringWithSpecialChars(
-                                gifs.find((item) => item._id == gifSelected)
-                                    ?.name
-                            )}
-                        </Text>
-                        <View />
-                    </View>
-                </View>
-            </Modal>
+            <MediaModal />
             <View
                 style={{
                     flex: 1,
