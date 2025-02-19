@@ -117,7 +117,7 @@ export default function Activity() {
                             gifSelected?.gif?.includes(".mov") ? (
                                 <Video
                                     source={{
-                                        uri: gifSelected?.gif.replace(
+                                        uri: gifSelected?.gif?.replace(
                                             "http://res",
                                             "https://res"
                                         ),
@@ -138,7 +138,7 @@ export default function Activity() {
                             ) : (
                                 <Image
                                     source={{
-                                        uri: gifSelected?.gif.replace(
+                                        uri: gifSelected?.gif?.replace(
                                             "http://res",
                                             "https://res"
                                         ),
