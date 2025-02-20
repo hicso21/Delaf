@@ -2,7 +2,7 @@
     "expo": {
         "name": "DELAF",
         "slug": "app",
-        "version": "1.11.16",
+        "version": "1.11.17",
         "orientation": "portrait",
         "icon": "./assets/DELAF_portada.png",
         "scheme": "myapp",
@@ -25,7 +25,7 @@
             }
         },
         "android": {
-            "versionCode": 33,
+            "versionCode": 34,
             "softwareKeyboardLayoutMode": "pan",
             "intentFilters": [
                 {

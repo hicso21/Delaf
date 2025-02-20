@@ -105,14 +105,6 @@ export default function Activity() {
                                 height: 80 * vw,
                             }}
                         >
-                            <Text>
-                                {Boolean(gifSelected?.gif)
-                                    ? gifSelected?.gif.replace(
-                                          "http://res",
-                                          "https://res"
-                                      )
-                                    : "false"}
-                            </Text>
                             {gifSelected?.gif?.includes(".mp4") ||
                             gifSelected?.gif?.includes(".mov") ? (
                                 <Video
@@ -124,16 +116,6 @@ export default function Activity() {
                                     }}
                                     isLooping
                                     resizeMode={ResizeMode.CONTAIN}
-                                    onError={(error) =>
-                                        Toast.show({
-                                            type: "error",
-                                            text1:
-                                                typeof error === "string"
-                                                    ? error
-                                                    : "No",
-                                            text2: JSON.stringify(error),
-                                        })
-                                    }
                                 />
                             ) : (
                                 <Image
@@ -148,16 +130,6 @@ export default function Activity() {
                                         height: "100%",
                                     }}
                                     resizeMode={ResizeMode.CONTAIN}
-                                    onError={(error) =>
-                                        Toast.show({
-                                            type: "error",
-                                            text1:
-                                                typeof error === "string"
-                                                    ? error
-                                                    : "No",
-                                            text2: JSON.stringify(error),
-                                        })
-                                    }
                                 />
                             )}
                         </View>
